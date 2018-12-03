@@ -6,7 +6,7 @@ parallel (
         {
 	    sh 'echo we are running in master job and pwd is $PWD'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
-            sh 'scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6slevk'
+            sh 'test-jenkinfile-ci/scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6slevk'
                
             stage('imx6slevk')
             {
@@ -26,7 +26,7 @@ parallel (
         {
 	    sh 'echo we are running in master job and pwd is $PWD'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
-            sh 'scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6ulevk'
+            sh 'test-jenkinfile-ci/scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6ulevk'
             stage('imx6ulevk')
             {
                 status = build(job: 'NXP-imx6ulevk-pipeline', propagate: false).result
@@ -35,7 +35,7 @@ parallel (
                     currentBuild.result = 'UNSTABLE' // of FAILURE
                 }
             }
-            sh 'scripts/build/projects/build-nxp-products.sh consolidate_env_variables imx6ulevk'
+            sh 'test-jenkinfile-ci/scripts/build/projects/build-nxp-products.sh consolidate_env_variables imx6ulevk'
         }
 
 
