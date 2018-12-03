@@ -19,6 +19,7 @@ pipeline
             steps 
             {
                 //sh '$BUILD_SCRIPT Delete_TemporaryFiles $MACHINE wayland UPDATE'
+		sh 'echo current directory is $PWD'
                 sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland $BUILD_TYPE'
             }
         }
