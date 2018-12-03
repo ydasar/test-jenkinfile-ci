@@ -5,7 +5,7 @@ pipeline
     environment 
     {
         MACHINE = "imx6slevk"
-	BUILD_SCRIPT = "~/test-jenkinfile-ci/scripts/build/projects/build-nxp-products.sh"
+	BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
 	BUILD_TYPE = "UPDATE"
     }
 
