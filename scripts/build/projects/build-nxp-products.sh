@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -ne 4 ]
+if [ $# -lt 2 ]
 then
     echo "Usage is: build-nxp-products.sh FUNCTION_NAME MACHINE DISTRO BUILD_TYPE"
     echo "FUNCTION_NAME can be BuildDistro, vte_build, CopyToFTP, CopyToWorker, LavaTest, Delete_TemporaryFiles"
@@ -18,7 +18,8 @@ BUILD_TYPE="$4"
 BUILD_DIR="build-qt5-$TMP_DISTRO-$MACHINE"
 VTE_BUILD="$5"
 SRC_CMD="MACHINE=$MACHINE DISTRO=$DISTRO source imx-snapshot-yocto-setup.sh -b $BUILD_DIR"
-source "scripts/environment/products/$MACHINE-exports.sh"
+cd 
+source "test-jenkinfile-ci/scripts/environment/products/$MACHINE-exports.sh"
 
 
 ErrorHandle()

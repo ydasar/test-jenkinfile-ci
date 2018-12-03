@@ -4,7 +4,7 @@ parallel (
     
         node('NXP_Ubuntu_16.04_64bit_Node3') 
         {
-            sh '/home/nxp-user3/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline Delete_TemporaryFiles imx6slevk'
+            sh '~/test-jenkinfile-ci/scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6slevk'
                
             stage('imx6slevk')
             {
@@ -22,7 +22,7 @@ parallel (
 
         node('NXP_Ubuntu_16.04_64bit_Node1') 
         {
-            sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline Delete_TemporaryFiles imx6ulevk'
+            sh '~/test-jenkinfile-ci/scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6ulevk'
             stage('imx6ulevk')
             {
                 status = build(job: 'NXP-imx6ulevk-pipeline', propagate: false).result
@@ -31,7 +31,7 @@ parallel (
                     currentBuild.result = 'UNSTABLE' // of FAILURE
                 }
             }
-            sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline consolidate_env_variables imx6ulevk'
+            sh '~/test-jenkinfile-ci/scripts/build/projects/build-nxp-products.sh consolidate_env_variables imx6ulevk'
         }
 
 

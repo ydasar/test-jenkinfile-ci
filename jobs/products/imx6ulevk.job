@@ -5,6 +5,8 @@ pipeline
     environment 
     {
         MACHINE = "imx6ulevk"
+	BUILD_SCRIPT = "~/test-jenkinfile-ci/scripts/build/projects/build-nxp-products.sh"
+	BUILD_TYPE = "UPDATE"
     }
 
     stages 
@@ -16,8 +18,8 @@ pipeline
         {
             steps 
             {
-                //sh '/home/nxp-user3/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline Delete_TemporaryFiles $MACHINE wayland UPDATE'
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline BuildDistro $MACHINE wayland UPDATE'
+                //sh '$BUILD_SCRIPT Delete_TemporaryFiles $MACHINE wayland UPDATE'
+                sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland $BUILD_TYPE'
             }
         }
     
@@ -26,7 +28,7 @@ pipeline
             steps 
             {
                 sh 'ls'
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline vte_build $MACHINE wayland UPDATE'
+                // sh '$BUILD_SCRIPT vte_build $MACHINE wayland $BUILD_TYP'
             }
         }
 
@@ -34,15 +36,15 @@ pipeline
         {
             steps 
             {
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline CopyToFTP $MACHINE wayland UPDATE'
+                sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland $BUILD_TYP'
             }
-        }
-    
+        } 
+
         stage('Wayland To LAVA') 
         {
             steps 
             {
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline CopyToWorker $MACHINE wayland UPDATE'
+                sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland $BUILD_TYP'
             }
         }
     
@@ -50,18 +52,18 @@ pipeline
         {
             steps 
             {
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline LavaTest $MACHINE wayland UPDATE'
+                sh '$BUILD_SCRIPT LavaTest $MACHINE wayland $BUILD_TYP'
             }
         }
         // Wayland ends
-
         
+
         // Xwayland starts
         stage('Build xwayland') 
         {
             steps 
             {
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline BuildDistro $MACHINE xwayland UPDATE'
+                sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland $BUILD_TYP'
             }
         }
     
@@ -70,7 +72,7 @@ pipeline
             steps 
             {
                 sh 'ls'
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline vte_build $MACHINE xwayland UPDATE'
+                // sh '$BUILD_SCRIPT vte_build $MACHINE xwayland $BUILD_TYP'
             }
         }
 
@@ -78,15 +80,16 @@ pipeline
         {
             steps 
             {
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline CopyToFTP $MACHINE xwayland UPDATE'
+                sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland $BUILD_TYP'
             }
         }
     
+
         stage('Xwayland To LAVA') 
         {
             steps 
             {
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline CopyToWorker $MACHINE xwayland UPDATE'
+                sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland $BUILD_TYP'
             }
         }
     
@@ -94,7 +97,7 @@ pipeline
         {
             steps 
             {
-                sh '/home/nxp-user1/NXP-IMX-BOTH-BUILDS/jenkins-build-nxp-common-pipeline LavaTest $MACHINE xwayland UPDATE'
+                sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland $BUILD_TYP'
             }
         }
         // Xwayland ends
