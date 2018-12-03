@@ -19,7 +19,7 @@ BUILD_DIR="build-qt5-$TMP_DISTRO-$MACHINE"
 VTE_BUILD="$5"
 SRC_CMD="MACHINE=$MACHINE DISTRO=$DISTRO source imx-snapshot-yocto-setup.sh -b $BUILD_DIR"
 cd 
-source "scripts/environment/products/$MACHINE-exports.sh"
+source "../../environment/products/$MACHINE-exports.sh"
 
 
 ErrorHandle()

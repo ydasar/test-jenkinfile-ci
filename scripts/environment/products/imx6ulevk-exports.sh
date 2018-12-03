@@ -17,4 +17,4 @@ LAVA_USER="worker4"
 LAVA_WORKER="134.86.254.27"
 
 JENKINS_USER="nxp-user1"
-source "scripts/environment/projects/nxp-linux-exports.sh"
+source "../projects/nxp-linux-exports.sh"
