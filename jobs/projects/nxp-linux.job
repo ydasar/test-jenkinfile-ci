@@ -5,7 +5,7 @@ parallel (
         node('NXP_Ubuntu_16.04_64bit_Node3') 
         {
 	    sh 'echo we are running in master job and pwd is $PWD'
-            sh 'clone git@github.com:ydasar/test-jenkinfile-ci.git'
+            sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
             sh 'scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6slevk'
                
             stage('imx6slevk')
@@ -25,7 +25,7 @@ parallel (
         node('NXP_Ubuntu_16.04_64bit_Node1') 
         {
 	    sh 'echo we are running in master job and pwd is $PWD'
-            sh 'clone git@github.com:ydasar/test-jenkinfile-ci.git'
+            sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
             sh 'scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6ulevk'
             stage('imx6ulevk')
             {
