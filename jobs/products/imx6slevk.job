@@ -5,8 +5,8 @@ pipeline
     environment 
     {
         MACHINE = "imx6slevk"
-	BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
-	BUILD_TYPE = "UPDATE"
+	    BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
+	    // BUILD_TYPE = "UPDATE"
     }
 
     stages 
@@ -19,8 +19,8 @@ pipeline
             steps 
             {
                 //sh '$BUILD_SCRIPT Delete_TemporaryFiles $MACHINE wayland UPDATE'
-		sh 'echo we are running from product job. pwd is $PWD'
-                sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland $BUILD_TYPE'
+		        sh 'echo we are running from product job. pwd is $PWD'
+                sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
             }
         }
     
@@ -29,7 +29,7 @@ pipeline
             steps 
             {
                 sh 'ls'
-                // sh '$BUILD_SCRIPT vte_build $MACHINE wayland $BUILD_TYP'
+                // sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
             }
         }
 
@@ -37,7 +37,7 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland $BUILD_TYP'
+                sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland'
             }
         } 
 
@@ -45,7 +45,7 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland $BUILD_TYP'
+                sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland'
             }
         }
     
@@ -53,7 +53,7 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT LavaTest $MACHINE wayland $BUILD_TYP'
+                sh '$BUILD_SCRIPT LavaTest $MACHINE wayland'
             }
         }
         // Wayland ends
@@ -64,7 +64,7 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland $BUILD_TYP'
+                sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland'
             }
         }
     
@@ -73,7 +73,7 @@ pipeline
             steps 
             {
                 sh 'ls'
-                // sh '$BUILD_SCRIPT vte_build $MACHINE xwayland $BUILD_TYP'
+                // sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
             }
         }
 
@@ -81,7 +81,7 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland $BUILD_TYP'
+                sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland'
             }
         }
     
@@ -90,7 +90,7 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland $BUILD_TYP'
+                sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland'
             }
         }
     
@@ -98,7 +98,7 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland $BUILD_TYP'
+                sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland'
             }
         }
         // Xwayland ends

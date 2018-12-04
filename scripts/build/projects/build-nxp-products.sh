@@ -10,11 +10,27 @@ then
     exit 1
 fi
 
+if [ -z "$4" ]
+then
+        today="$(date +%a)"
+        if [ "${today}" == "Sat" ]
+        then
+                echo "We are on Saturday"
+                BUILD_TYPE="CLEAN"
+        else
+                echo "We are on Weekdays"
+                BUILD_TYPE="UPDATE"
+        fi
+else
+        BUILD_TYPE="$4"
+fi
+
+
 CALLED_FUNCTION="$1"
 MACHINE="$2"
 TMP_DISTRO="$3"
 DISTRO="fsl-imx-$TMP_DISTRO"
-BUILD_TYPE="$4"
+# BUILD_TYPE="$4"
 BUILD_DIR="build-qt5-$TMP_DISTRO-$MACHINE"
 # VTE_BUILD="$5"
 SRC_CMD="MACHINE=$MACHINE DISTRO=$DISTRO source imx-snapshot-yocto-setup.sh -b $BUILD_DIR"
@@ -37,11 +53,31 @@ Delete_TemporaryFiles()
 }
 
 
+export_build_variables()
+{
+    echo "${MACHINE}_${TMP_DISTRO}_EMAIL_SUBJECT = NXP build $BUILD_NUMBER details" >> $EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_CAUSE = $CAUSE" >> $EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_MACHINE =  $MACHINE" >> $EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_SRC_CMD = $SRC_CMD" >> $EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_BITBAKE_CMD = $BITBAKE_CMD" >> $EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_build_status = $BUILD_STATUS" >> $EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_build_time = $BUILD_TIME" >>  $EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_BUILD_URL = $BUILD_URL" >> $EXPORT_FILE
+    if [ $BUILD_TYPE = "CLEAN" ]
+    then
+	    echo "${MACHINE}_${TMP_DISTRO}_build_type = Scratch" >> $EXPORT_FILE
+    else
+	    echo "${MACHINE}_${TMP_DISTRO}_build_type = Incremental" >> $EXPORT_FILE
+    fi
+}
+
+
 BuildDistro()
 {
 
 	# Note down build start time
 	build_start_time=`date +%s`
+    export_build_variables
 	cd $BUILD_BASE_DIR
 
 	# For CLEAN build, delete the directory and start new build
@@ -143,29 +179,25 @@ BuildDistro()
 	build_time=$((build_end_time-build_start_time))
 	BUILD_TIME="$(($build_time / 60)) minutes and $(($build_time % 60)) seconds"
 
+    BUILD_STATUS="Successful"
     # export the variables to jenkins environment
-    echo "${MACHINE}_${TMP_DISTRO}_EMAIL_SUBJECT = NXP build $BUILD_NUMBER details" >> $EXPORT_FILE
-    echo "${MACHINE}_${TMP_DISTRO}_CAUSE = $CAUSE" >> $EXPORT_FILE
-    echo "${MACHINE}_${TMP_DISTRO}_MACHINE =  $MACHINE" >> $EXPORT_FILE
-    echo "${MACHINE}_${TMP_DISTRO}_SRC_CMD = $SRC_CMD" >> $EXPORT_FILE
-    echo "${MACHINE}_${TMP_DISTRO}_BITBAKE_CMD = $BITBAKE_CMD" >> $EXPORT_FILE
-    echo "${MACHINE}_${TMP_DISTRO}_build_status = Successful" >> $EXPORT_FILE
-    echo "${MACHINE}_${TMP_DISTRO}_build_time = $BUILD_TIME" >>  $EXPORT_FILE
-    echo "${MACHINE}_${TMP_DISTRO}_BUILD_URL = $BUILD_URL" >> $EXPORT_FILE
-    if [ $BUILD_TYPE = "CLEAN" ]
-    then
-	    echo "${MACHINE}_${TMP_DISTRO}_build_type = Scratch" >> $EXPORT_FILE
-    else
-	    echo "${MACHINE}_${TMP_DISTRO}_build_type = Incremental" >> $EXPORT_FILE
-    fi
+    export_build_variables
 
 }
+
+export_vte_variables()
+{
+	echo "${MACHINE}_${TMP_DISTRO}_vte_build_status = $VTE_BUILD_STATUS" >> $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_vte_build_time = $BUILD_TIME" >> $EXPORT_FILE
+}
+
 
 vte_build()
 {
 
 	# VTE Building
 	echo " Current directory is $PWD"
+    export_vte_variables
 
     # Note down build start time
     build_start_time=`date +%s`
@@ -267,9 +299,9 @@ vte_build()
         # Calculate build time
         build_time=$((build_end_time-build_start_time))
         BUILD_TIME="$(($build_time / 60)) minutes and $(($build_time % 60)) seconds"
-	
-	echo "${MACHINE}_${TMP_DISTRO}_vte_build_status = Successful" >> $EXPORT_FILE
-	echo "${MACHINE}_${TMP_DISTRO}_vte_build_time = $BUILD_TIME" >> $EXPORT_FILE
+
+    VTE_BUILD_STATUS="Successful"	
+    export_vte_variables
 
 }
 
@@ -278,6 +310,7 @@ vte_build()
 CopyToFTP()
 {
 
+	echo "${MACHINE}_${TMP_DISTRO}_FTP_SERVER_LOCATION = No URL" >> $EXPORT_FILE
 	cd $BUILD_BASE_DIR ; cd $BUILD_DIR ; cd meta-imx-snapshot ; cd $BUILD_DIR
 	# Create a new directory in FTP server
 	DEST_DIR_NAME="$DEST_DIR_NAME""_""$TMP_DISTRO"
@@ -358,10 +391,22 @@ CopyToWorker()
 
 }
 
+
+export_lava_variables()
+{
+	echo "${MACHINE}_${TMP_DISTRO}_LAVA_JOB_URL = $LAVA_JOB_URL/$LAVA_JOB_ID" >> $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_LAVA_TEST_TIME = $LAVA_TEST_TIME" >>  $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_U_BOOT_VER = $u_boot_ver" >>  $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_KERNEL_VER = $kernel_ver" >>  $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_TEST_SUITES = $test_suite_pass_fail_skip" >> $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_LAVA_STATUS = $LAVA_STATUS" >> $EXPORT_FILE
+}
+
+
 LavaTest()
 {
-	echo "${MACHINE}_${TMP_DISTRO}_LAVA_STATUS = $LAVA_STATUS" >> $EXPORT_FILE
 
+    export_lava_variables
 	# Note down LAVA test start time
 	lava_start_time=`date +%s`
 
@@ -440,20 +485,11 @@ LavaTest()
 	LAVA_TEST_TIME="$(($lava_test_time / 60)) minutes and $(($lava_test_time % 60)) seconds"
 	TEST_SUITES=$test_suite_pass_fail_skip
 
+    LAVA_STATUS="Successful"
 	# export the variables to jenkins environment
-	echo "${MACHINE}_${TMP_DISTRO}_LAVA_JOB_URL = $LAVA_JOB_URL/$LAVA_JOB_ID" >> $EXPORT_FILE
-	echo "${MACHINE}_${TMP_DISTRO}_LAVA_TEST_TIME = $LAVA_TEST_TIME" >>  $EXPORT_FILE
-	echo "${MACHINE}_${TMP_DISTRO}_U_BOOT_VER = $u_boot_ver" >>  $EXPORT_FILE
-	echo "${MACHINE}_${TMP_DISTRO}_KERNEL_VER = $kernel_ver" >>  $EXPORT_FILE
-	echo "${MACHINE}_${TMP_DISTRO}_TEST_SUITES = $test_suite_pass_fail_skip" >> $EXPORT_FILE
-	echo "${MACHINE}_${TMP_DISTRO}_LAVA_STATUS = Successful" >> $EXPORT_FILE
+    export_lava_variables
 
 
-}
-
-build_email_content()
-{
-    ls	
 }
 
 consolidate_env_variables()
