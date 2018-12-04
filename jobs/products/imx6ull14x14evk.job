@@ -105,8 +105,11 @@ pipeline
 
         stage('Notify')
         {
-            build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local-email-exports', value: '/tmp/$MACHINE-exports']])
-        }
+	    steps
+	    {
+            	build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local-email-exports', value: '/tmp/$MACHINE-exports']])
+            }
+	}
         
     }
 }
