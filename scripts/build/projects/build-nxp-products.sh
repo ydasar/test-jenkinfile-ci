@@ -16,7 +16,7 @@ TMP_DISTRO="$3"
 DISTRO="fsl-imx-$TMP_DISTRO"
 BUILD_TYPE="$4"
 BUILD_DIR="build-qt5-$TMP_DISTRO-$MACHINE"
-VTE_BUILD="$5"
+# VTE_BUILD="$5"
 SRC_CMD="MACHINE=$MACHINE DISTRO=$DISTRO source imx-snapshot-yocto-setup.sh -b $BUILD_DIR"
 source "scripts/environment/products/$MACHINE-exports.sh"
 
@@ -463,5 +463,6 @@ consolidate_env_variables()
 }
 
 #main function
-echo "This is the function called $CALLED_FUNCTION"
+echo "Called function=$CALLED_FUNCTION, MACHINE=$MACHINE, DISTRO=$DISTRO, BUILD_TYEP=$BUILD_TYPE"
+echo "BUILD_DIR=$BUILD_DIR, SRC_CMD=$SRC_CMD"
 eval $CALLED_FUNCTION

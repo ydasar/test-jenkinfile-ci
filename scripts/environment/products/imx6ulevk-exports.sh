@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Change the below content for product specific
-MACHINE="imx6ulevk"
+#MACHINE="imx6ulevk"
 
-BUILD_TYPE="NONE"
-DISTRO="fsl-imx-wayland"
-BUILD_DIR="build-qt5-wayland-$MACHINE"
+#BUILD_TYPE="NONE"
+#DISTRO="fsl-imx-wayland"
+#BUILD_DIR="build-qt5-wayland-$MACHINE"
 
 NXP_BOARD="imx6ulevk"
 ROOTFS_FILE="fsl-image-qt5-validation-imx-$MACHINE.tar.bz2"
