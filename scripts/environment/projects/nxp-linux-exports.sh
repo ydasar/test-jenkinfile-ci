@@ -19,6 +19,7 @@ DST_LAVA_WORKER_TFTPBOOT="$LAVA_WORKER:/opt/tftpboot/$MACHINE"
 LAVA_JOB_URL="http://134.86.60.40/scheduler/job/"
 
 EXPORT_FILE="/tmp/nxp-all-products-export"
+LOCAL_EMAIL_EXPORT_FILE="/tmp/$MACHINE-exports"
 BUILD_STATUS="<h3 style=\"color: white; background-color: red\">FAIL</h3>"
 #echo "${MACHINE}_${TMP_DISTRO}_build_status = $BUILD_STATUS" >> $EXPORT_FILE
 VTE_BUILD_STATUS="<h3 style=\"color: white; background-color: red\">FAIL</h3>"

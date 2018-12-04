@@ -53,21 +53,48 @@ Delete_TemporaryFiles()
 }
 
 
+Delete_Local_Files()
+{
+	if [ -f $LOCAL_EMAIL_EXPORT_FILE ]
+	then
+		echo "Delete $LOCAL_EMAIL_EXPORT_FILE file"
+		rm $LOCAL_EMAIL_EXPORT_FILE
+	fi
+}
+
+
 export_build_variables()
 {
+    # Variables to be exported and injected for groupemail
     echo "${MACHINE}_${TMP_DISTRO}_EMAIL_SUBJECT = NXP build $BUILD_NUMBER details" >> $EXPORT_FILE
     echo "${MACHINE}_${TMP_DISTRO}_CAUSE = $CAUSE" >> $EXPORT_FILE
     echo "${MACHINE}_${TMP_DISTRO}_MACHINE =  $MACHINE" >> $EXPORT_FILE
     echo "${MACHINE}_${TMP_DISTRO}_SRC_CMD = $SRC_CMD" >> $EXPORT_FILE
     echo "${MACHINE}_${TMP_DISTRO}_BITBAKE_CMD = $BITBAKE_CMD" >> $EXPORT_FILE
     echo "${MACHINE}_${TMP_DISTRO}_build_status = $BUILD_STATUS" >> $EXPORT_FILE
-    echo "${MACHINE}_${TMP_DISTRO}_build_time = $BUILD_TIME" >>  $EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_build_time = $BUILD_TIME" >> $EXPORT_FILE
     echo "${MACHINE}_${TMP_DISTRO}_BUILD_URL = $BUILD_URL" >> $EXPORT_FILE
     if [ $BUILD_TYPE = "CLEAN" ]
     then
 	    echo "${MACHINE}_${TMP_DISTRO}_build_type = Scratch" >> $EXPORT_FILE
     else
 	    echo "${MACHINE}_${TMP_DISTRO}_build_type = Incremental" >> $EXPORT_FILE
+    fi
+
+    # Variables to be exported and injected for individual email
+    echo "${MACHINE}_${TMP_DISTRO}_EMAIL_SUBJECT = NXP build $BUILD_NUMBER details" >> $LOCAL_EMAIL_EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_CAUSE = $CAUSE" >> $LOCAL_EMAIL_EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_MACHINE =  $MACHINE" >> $LOCAL_EMAIL_EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_SRC_CMD = $SRC_CMD" >> $LOCAL_EMAIL_EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_BITBAKE_CMD = $BITBAKE_CMD" >> $LOCAL_EMAIL_EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_build_status = $BUILD_STATUS" >> $LOCAL_EMAIL_EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_build_time = $BUILD_TIME" >> $LOCAL_EMAIL_EXPORT_FILE
+    echo "${MACHINE}_${TMP_DISTRO}_BUILD_URL = $BUILD_URL" >> $LOCAL_EMAIL_EXPORT_FILE
+    if [ $BUILD_TYPE = "CLEAN" ]
+    then
+	    echo "${MACHINE}_${TMP_DISTRO}_build_type = Scratch" >> $LOCAL_EMAIL_EXPORT_FILE
+    else
+	    echo "${MACHINE}_${TMP_DISTRO}_build_type = Incremental" >> $LOCAL_EMAIL_EXPORT_FILE
     fi
 }
 
@@ -189,6 +216,9 @@ export_vte_variables()
 {
 	echo "${MACHINE}_${TMP_DISTRO}_vte_build_status = $VTE_BUILD_STATUS" >> $EXPORT_FILE
 	echo "${MACHINE}_${TMP_DISTRO}_vte_build_time = $BUILD_TIME" >> $EXPORT_FILE
+
+	echo "${MACHINE}_${TMP_DISTRO}_vte_build_status = $VTE_BUILD_STATUS" >> $LOCAL_EMAIL_EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_vte_build_time = $BUILD_TIME" >> $LOCAL_EMAIL_EXPORT_FILE
 }
 
 
@@ -311,6 +341,7 @@ CopyToFTP()
 {
 
 	echo "${MACHINE}_${TMP_DISTRO}_FTP_SERVER_LOCATION = No URL" >> $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_FTP_SERVER_LOCATION = No URL" >> $LOCAL_EMAIL_EXPORT_FILE
 	cd $BUILD_BASE_DIR ; cd $BUILD_DIR ; cd meta-imx-snapshot ; cd $BUILD_DIR
 	# Create a new directory in FTP server
 	DEST_DIR_NAME="$DEST_DIR_NAME""_""$TMP_DISTRO"
@@ -356,6 +387,7 @@ CopyToFTP()
 	# export the variables to jenkins environment
 	FTP_SERVER_LOCATION="ftp://inpftp.ina.mentorg.com:/pub/NXP/$MACHINE/$DEST_DIR_NAME"
 	echo "${MACHINE}_${TMP_DISTRO}_FTP_SERVER_LOCATION = $FTP_SERVER_LOCATION" >> $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_FTP_SERVER_LOCATION = $FTP_SERVER_LOCATION" >> $LOCAL_EMAIL_EXPORT_FILE
 
 }
 
@@ -396,10 +428,17 @@ export_lava_variables()
 {
 	echo "${MACHINE}_${TMP_DISTRO}_LAVA_JOB_URL = $LAVA_JOB_URL/$LAVA_JOB_ID" >> $EXPORT_FILE
 	echo "${MACHINE}_${TMP_DISTRO}_LAVA_TEST_TIME = $LAVA_TEST_TIME" >>  $EXPORT_FILE
-	echo "${MACHINE}_${TMP_DISTRO}_U_BOOT_VER = $u_boot_ver" >>  $EXPORT_FILE
-	echo "${MACHINE}_${TMP_DISTRO}_KERNEL_VER = $kernel_ver" >>  $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_U_BOOT_VER = $u_boot_ver" >> $EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_KERNEL_VER = $kernel_ver" >> $EXPORT_FILE
 	echo "${MACHINE}_${TMP_DISTRO}_TEST_SUITES = $test_suite_pass_fail_skip" >> $EXPORT_FILE
 	echo "${MACHINE}_${TMP_DISTRO}_LAVA_STATUS = $LAVA_STATUS" >> $EXPORT_FILE
+
+	echo "${MACHINE}_${TMP_DISTRO}_LAVA_JOB_URL = $LAVA_JOB_URL/$LAVA_JOB_ID" >> $LOCAL_EMAIL_EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_LAVA_TEST_TIME = $LAVA_TEST_TIME" >> $LOCAL_EMAIL_EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_U_BOOT_VER = $u_boot_ver" >> $LOCAL_EMAIL_EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_KERNEL_VER = $kernel_ver" >> $LOCAL_EMAIL_EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_TEST_SUITES = $test_suite_pass_fail_skip" >> $LOCAL_EMAIL_EXPORT_FILE
+	echo "${MACHINE}_${TMP_DISTRO}_LAVA_STATUS = $LAVA_STATUS" >> $LOCAL_EMAIL_EXPORT_FILE
 }
 
 
