@@ -96,7 +96,7 @@ node('NXP_Ubuntu_16.04_64bit_Node3')
 {
     stage('Notify')
     {
-        status = build(job: 'NXP-email-pipeline', parameters: [[$class: 'StringParameterValue', name: 'export_nxp_node3', value: '/tmp/nxp-all-products-export']], propagate: false).result
+        status = build(job: 'NXP-part1-pipeline-email', parameters: [[$class: 'StringParameterValue', name: 'export_nxp_node3', value: '/tmp/nxp-all-products-export']], propagate: false).result
         if(status == 'FAILURE')
         {
             currentBuild.result = 'UNSTABLE' // of FAILURE
