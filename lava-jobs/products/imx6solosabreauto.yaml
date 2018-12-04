@@ -1,0 +1,67 @@
+device_type: imx6solosabreauto
+job_name: imx6solosabreauto multiple tests
+timeouts:
+  job:
+    hours: 4
+  action:
+    hours: 4
+  connection:
+    hours: 4
+priority: medium
+visibility: public
+actions:
+- deploy:
+    namespace: nfs_boot
+    timeout:
+      minutes: 10
+    to: tftp
+    kernel:
+      url: http://134.86.254.27/tftpboot/imx6solosabreauto/zImage
+      type: zimage
+    nfsrootfs:
+      url: http://134.86.254.27/rootfs/imx6solosabreauto/fsl-image-qt5-validation-imx-imx6solosabreauto.tar.bz2
+    os: oe
+    dtb:
+      url: http://134.86.254.27/tftpboot/imx6solosabreauto/imx6solosabreauto-sdb.dtb
+- boot:
+    namespace: nfs_boot
+    method: u-boot
+    failure_retry: 2
+    commands: nfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@imx6solosabreauto:~#'
+    timeout:
+      minutes: 10
+- test:
+    namespace: nfs_boot
+    timeout:
+      hours: 4
+    definitions:
+    - repository: ssh://git@stash.alm.mentorg.com:7999/qa/linux-qa.git
+      from: git
+      branch: test_sequence_check
+      path: automated/linux/ltp/ltp.yaml
+      name: test_suite_ltp
+    - repository:  https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/smoke/smoke.yaml
+      name: test_suite_smoke
+    - repository: https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/lmbench/lmbench-memory.yaml
+      name: test_suite_lmbench
+    - repository:  https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/iperf/iperf.yaml
+      name: test_suite_iperf
+    - repository: https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/memtester/memtester.yaml
+      name: test_suite_memtester
+    - repository: https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/iozone/iozone.yaml
+      name: test_suite_iozone

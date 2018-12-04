@@ -1,0 +1,62 @@
+device_type: imx6ulevk
+job_name: NXP imx6ulevk multiple tests
+timeouts:
+  job:
+    hours: 4
+  action:
+    hours: 4
+  connection:
+    hours: 4
+priority: medium
+visibility: public
+actions:
+- deploy:
+    namespace: nfs_boot
+    timeout:
+      minutes: 10
+    to: tftp
+    kernel:
+      url: http://134.86.254.27/tftpboot/imx6ulevk/zImage
+      type: zimage
+    nfsrootfs:
+      url: http://134.86.254.27/rootfs/imx6ulevk/fsl-image-qt5-validation-imx-imx6ulevk.tar.bz2
+    os: oe
+    dtb:
+      url: http://134.86.254.27/tftpboot/imx6ulevk/imx6ul-14x14-evk.dtb
+- boot:
+    namespace: nfs_boot
+    method: u-boot
+    failure_retry: 2
+    commands: nfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@imx6ulevk:~#'
+    timeout:
+      minutes: 10
+
+- test:
+    namespace: nfs_boot
+    timeout:
+      hours: 4
+    definitions:
+    - repository:
+        metadata:
+            format: Lava-Test Single test case run
+            name: NXP_IMX_VTE_TEST_imx6ull
+            description: "NXP_IMX_VTE_TEST (ltp)"
+            os:
+                - oe
+            scope:
+                - functional
+            devices:
+                - imx6ull
+        run:
+            steps:
+                - lava-test-case mount --shell ls /opt ; ls /opt/ltp ; cd /opt/ltp ; source ./manual_test;
+                - lava-test-case TGE-LV-RTC-0100 --shell rtc_test.sh 2
+      from: inline
+      name: test_suite_NXP_IMX_VTE_TEST
+      path: inline/NXP_IMX_VTE_TEST_imx6ull.yaml
+

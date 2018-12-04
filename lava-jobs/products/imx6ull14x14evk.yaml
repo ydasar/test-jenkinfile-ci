@@ -1,5 +1,5 @@
-device_type: imx6slevk
-job_name: NXP imx6slevk multiple tests
+device_type: imx6ull14x14evk
+job_name: NXP imx6ull14x14evk multiple tests
 timeouts:
   job:
     hours: 4
@@ -16,13 +16,13 @@ actions:
       minutes: 10
     to: tftp
     kernel:
-      url: http://134.86.254.27/tftpboot/imx6slevk/zImage
+      url: http://134.86.254.27/tftpboot/imx6ull14x14evk/zImage
       type: zimage
     nfsrootfs:
-      url: http://134.86.254.27/rootfs/imx6slevk/fsl-image-qt5-validation-imx-imx6slevk.tar.bz2
+      url: http://134.86.254.27/rootfs/imx6ull14x14evk/fsl-image-qt5-validation-imx-imx6ull14x14evk.tar.bz2
     os: oe
     dtb:
-      url: http://134.86.254.27/tftpboot/imx6slevk/imx6sl-evk.dtb
+      url: http://134.86.254.27/tftpboot/imx6ull14x14evk/imx6ull-14x14-evk.dtb
 - boot:
     namespace: nfs_boot
     method: u-boot
@@ -32,10 +32,9 @@ actions:
       login_prompt: 'login:'
       username: root
     prompts:
-    - 'root@imx6slevk:~#'
+    - 'root@imx6ull14x14evk:~#'
     timeout:
       minutes: 10
-
 - test:
     namespace: nfs_boot
     timeout:
@@ -69,14 +68,14 @@ actions:
     - repository:
         metadata:
             format: Lava-Test Single test case run
-            name: NXP_IMX_VTE_TEST_imx6slevk
+            name: NXP_IMX_VTE_TEST_imx6ull
             description: "NXP_IMX_VTE_TEST (ltp)"
             os:
                 - oe
             scope:
                 - functional
             devices:
-                - imx6slevk
+                - imx6ull14x14evk
         run:
             steps:
                 - lava-test-case mount --shell ls /opt ; ls /opt/ltp ; cd /opt/ltp ; source ./manual_test;
@@ -146,5 +145,4 @@ actions:
                 - lava-test-case TGE-LV-EMMC-HS400-0010    --shell  rtc_testapp_6 -T 50 -m mem && storage_all.sh 12
       from: inline
       name: test_suite_NXP_IMX_VTE_TEST
-      path: inline/NXP_IMX_VTE_TEST_imx6slevk.yaml
-
+      path: inline/NXP_IMX_VTE_TEST_imx6ull14x14evk.yaml

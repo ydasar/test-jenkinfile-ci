@@ -1,0 +1,108 @@
+pipeline 
+{
+    agent {label 'NXP_Ubuntu_16.04_64bit_Node1'}
+
+    environment 
+    {
+        MACHINE = "imx6solosabreauto"
+	    BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
+	    // BUILD_TYPE = "UPDATE"
+    }
+
+    stages 
+    {
+
+
+        // Wayland starts
+        stage('Build wayland') 
+        {
+            steps 
+            {
+                //sh '$BUILD_SCRIPT Delete_TemporaryFiles $MACHINE wayland UPDATE'
+		        sh 'echo we are running from product job. pwd is $PWD'
+                sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
+            }
+        }
+    
+        stage('Wayland VTE') 
+        {
+            steps 
+            {
+                sh 'ls'
+                // sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
+            }
+        }
+
+        stage('Wayland To FTP ') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland'
+            }
+        } 
+
+        stage('Wayland To LAVA') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland'
+            }
+        }
+    
+        stage('Wayland LAVA') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT LavaTest $MACHINE wayland'
+            }
+        }
+        // Wayland ends
+        
+
+        // Xwayland starts
+        stage('Build xwayland') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland'
+            }
+        }
+    
+        stage('Xwayland VTE') 
+        {
+            steps 
+            {
+                sh 'ls'
+                // sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
+            }
+        }
+
+        stage('Xwayland To FTP ') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland'
+            }
+        }
+    
+
+        stage('Xwayland To LAVA') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland'
+            }
+        }
+    
+        stage('Xwayland LAVA') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland'
+            }
+        }
+        // Xwayland ends
+
+        
+    }
+}
