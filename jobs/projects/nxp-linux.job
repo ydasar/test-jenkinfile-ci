@@ -17,7 +17,26 @@ parallel (
                     currentBuild.result = 'UNSTABLE' // of FAILURE
                 }
             }
+
+            stage('imx6sllevk')
+            {
+                status = build(job: 'NXP-imx6sllevk-pipeline', propagate: false).result
+                if(status == 'FAILURE')
+                {
+                    currentBuild.result = 'UNSTABLE' // of FAILURE
+                }
+            }
+            stage('imx6sxsabresd')
+            {
+                status = build(job: 'NXP-imx6sxsabresd-pipeline', propagate: false).result
+                if(status == 'FAILURE')
+                {
+                    currentBuild.result = 'UNSTABLE' // of FAILURE
+                }
+            }
         }
+
+
     },
 
     "nxp-node1" : 
@@ -37,8 +56,36 @@ parallel (
                     currentBuild.result = 'UNSTABLE' // of FAILURE
                 }
             }
+
+            stage('imx6ull14x14evk')
+            {
+                status = build(job: 'NXP-imx6ull14x14evk-pipeline', propagate: false).result
+                if(status == 'FAILURE')
+                {
+                    currentBuild.result = 'UNSTABLE' // of FAILURE
+                }
+            }
+
+            stage('imx6solosabreauto')
+            {
+                status = build(job: 'NXP-imx6solosabreauto-pipeline', propagate: false).result
+                if(status == 'FAILURE')
+                {
+                    currentBuild.result = 'UNSTABLE' // of FAILURE
+                }
+            }
+
+            stage('imx6solosabresd')
+            {
+                status = build(job: 'NXP-imx6solosabresd-pipeline', propagate: false).result
+                if(status == 'FAILURE')
+                {
+                    currentBuild.result = 'UNSTABLE' // of FAILURE
+                }
+            }
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh consolidate_env_variables imx6ulevk'
         }
+
 
 
     }
