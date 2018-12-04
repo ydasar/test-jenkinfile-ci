@@ -4,7 +4,7 @@ pipeline
 
     environment 
     {
-        MACHINE = "imx6slevk"
+        MACHINE = "imx6sllevk"
 	    BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
 	    // BUILD_TYPE = "UPDATE"
     }
