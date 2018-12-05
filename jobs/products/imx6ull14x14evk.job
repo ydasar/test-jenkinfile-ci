@@ -107,7 +107,7 @@ pipeline
         {
 	    steps
 	    {
-            	build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local-email-exports', value: '/tmp/$MACHINE-exports']])
+            	build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/$MACHINE-exports']])
             }
 	}
         
