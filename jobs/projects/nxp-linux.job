@@ -23,7 +23,7 @@ parallel (
                 status = build(job: 'NXP-imx6sllevk-pipeline', propagate: false).result
                 if(status == 'FAILURE')
                 {
-                    currentBuild.result = 'UNSTABLE' // of FAILURE
+                    currentStage.result = 'UNSTABLE' // of FAILURE
                 }
             }
             stage('imx6sxsabresd')
@@ -80,7 +80,7 @@ parallel (
                 status = build(job: 'NXP-imx6solosabresd-pipeline', propagate: false).result
                 if(status == 'FAILURE')
                 {
-                    currentBuild.result = 'UNSTABLE' // of FAILURE
+                    currentStage.result = 'FAILURE' // of FAILURE
                 }
             }
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh consolidate_env_variables imx6ulevk'
