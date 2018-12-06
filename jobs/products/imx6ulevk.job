@@ -102,14 +102,14 @@ pipeline
             }
         }
         // Xwayland ends
-
-        stage('Notify')
-        {
-            steps
-            {
-                build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6ulevk-exports']])
-            }
-        }
-        
     }
+
+    post
+    {
+        always
+        {
+            build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6ulevk-exports']])
+        }
+    }
+
 }
