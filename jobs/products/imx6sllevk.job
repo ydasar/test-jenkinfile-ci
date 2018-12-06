@@ -28,7 +28,7 @@ pipeline
             steps 
             {
                 sh 'ls'
-                // sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
+                sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
             }
         }
 
@@ -72,7 +72,7 @@ pipeline
             steps 
             {
                 sh 'ls'
-                // sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
+                sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
             }
         }
 
