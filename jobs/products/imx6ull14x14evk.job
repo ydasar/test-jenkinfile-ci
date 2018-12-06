@@ -5,8 +5,8 @@ pipeline
     environment 
     {
         MACHINE = "imx6ull14x14evk"
-	BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
-	// BUILD_TYPE = "UPDATE"
+        BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
+        // BUILD_TYPE = "UPDATE"
     }
 
     stages 
@@ -18,8 +18,8 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT Delete_Local_Files $MACHINE wayland'
-		sh 'echo we are running from product job. pwd is $PWD'
+                sh 'echo we are running from product job. pwd is $PWD'
+                sh '$BUILD_SCRIPT clear_product_export $MACHINE wayland'
                 sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
             }
         }
@@ -105,11 +105,11 @@ pipeline
 
         stage('Notify')
         {
-	    steps
-	    {
-            	build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6ull14x14evk-exports']])
+            steps
+            {
+                build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6ull14x14evk-exports']])
             }
-	}
+        }
         
     }
 }

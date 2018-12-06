@@ -4,37 +4,26 @@ parallel (
     
         node('NXP_Ubuntu_16.04_64bit_Node3') 
         {
-	    sh 'echo we are running in master job and pwd is $PWD'
-	    sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
+            sh 'echo we are running in master job and pwd is $PWD'
+            sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
-            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6slevk'
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6slevk'
                
             stage('imx6slevk')
             {
-                status = build(job: 'NXP-imx6slevk-pipeline', propagate: false).result
-                if(status == 'FAILURE')
-                {
-                    currentBuild.result = 'UNSTABLE' // of FAILURE
-                }
+                build(job: 'NXP-imx6slevk-pipeline', propagate: false)
+            }
+
+            }
+            stage('imx6sxsabresd')
+            {
+                build(job: 'NXP-imx6sxsabresd-pipeline', propagate: false)
             }
 
             stage('imx6sllevk')
             {
-                status = build(job: 'NXP-imx6sllevk-pipeline', propagate: false).result
-                if(status == 'FAILURE')
-                {
-                    currentStage.result = 'UNSTABLE' // of FAILURE
-                }
+                build(job: 'NXP-imx6sllevk-pipeline', propagate: false)
             }
-            stage('imx6sxsabresd')
-            {
-                status = build(job: 'NXP-imx6sxsabresd-pipeline', propagate: false).result
-                if(status == 'FAILURE')
-                {
-                    currentBuild.result = 'UNSTABLE' // of FAILURE
-                }
-            }
-        }
 
 
     },
@@ -44,46 +33,30 @@ parallel (
 
         node('NXP_Ubuntu_16.04_64bit_Node1') 
         {
-	    sh 'echo we are running in master job and pwd is $PWD'
-	    sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
+            sh 'echo we are running in master job and pwd is $PWD'
+            sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
-            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh Delete_TemporaryFiles imx6ulevk'
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6ulevk'
             stage('imx6ulevk')
             {
-                status = build(job: 'NXP-imx6ulevk-pipeline', propagate: false).result
-                if(status == 'FAILURE')
-                {
-                    currentBuild.result = 'UNSTABLE' // of FAILURE
-                }
+                build(job: 'NXP-imx6ulevk-pipeline', propagate: false)
             }
 
             stage('imx6ull14x14evk')
             {
-                status = build(job: 'NXP-imx6ull14x14evk-pipeline', propagate: false).result
-                if(status == 'FAILURE')
-                {
-                    currentBuild.result = 'UNSTABLE' // of FAILURE
-                }
+                build(job: 'NXP-imx6ull14x14evk-pipeline', propagate: false)
             }
 
             stage('imx6solosabreauto')
             {
-                status = build(job: 'NXP-imx6solosabreauto-pipeline', propagate: false).result
-                if(status == 'FAILURE')
-                {
-                    currentBuild.result = 'UNSTABLE' // of FAILURE
-                }
+                build(job: 'NXP-imx6solosabreauto-pipeline', propagate: false)
             }
 
             stage('imx6solosabresd')
             {
-                status = build(job: 'NXP-imx6solosabresd-pipeline', propagate: false).result
-                if(status == 'FAILURE')
-                {
-                    currentStage.result = 'FAILURE' // of FAILURE
-                }
+                build(job: 'NXP-imx6solosabresd-pipeline', propagate: false)
             }
-            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh consolidate_env_variables imx6ulevk'
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh consolidate_nodes_exports imx6solosabresd'
         }
 
 
@@ -96,10 +69,6 @@ node('NXP_Ubuntu_16.04_64bit_Node3')
 {
     stage('Notify')
     {
-        status = build(job: 'NXP-part1-pipeline-email', parameters: [[$class: 'StringParameterValue', name: 'export_nxp_node3', value: '/tmp/nxp-all-products-export']], propagate: false).result
-        if(status == 'FAILURE')
-        {
-            currentBuild.result = 'UNSTABLE' // of FAILURE
-        }
+        build(job: 'NXP-part1-pipeline-email', parameters: [[$class: 'StringParameterValue', name: 'part1_email_exports', value: '/tmp/part1_email_exports']], propagate: false)
     }
 }
