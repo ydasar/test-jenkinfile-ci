@@ -85,7 +85,7 @@ export_build_variables()
     fi
 
     # Variables to be exported and injected for individual product email
-    echo "product_${TMP_DISTRO}_EMAIL_SUBJECT = NXP build $BUILD_NUMBER details" >> $EMAIL_LOCAL_EXPORT_FILE
+    echo "product_${TMP_DISTRO}_EMAIL_SUBJECT = NXP $MACHINE build $BUILD_NUMBER " >> $EMAIL_LOCAL_EXPORT_FILE
     echo "product_${TMP_DISTRO}_CAUSE = $CAUSE" >> $EMAIL_LOCAL_EXPORT_FILE
     echo "product_${TMP_DISTRO}_MACHINE =  $MACHINE" >> $EMAIL_LOCAL_EXPORT_FILE
     echo "product_${TMP_DISTRO}_SRC_CMD = $SRC_CMD" >> $EMAIL_LOCAL_EXPORT_FILE
