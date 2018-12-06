@@ -12,7 +12,6 @@ pipeline
     stages 
     {
 
-
         // Wayland starts
         stage('Build wayland') 
         {
@@ -102,7 +101,11 @@ pipeline
             }
         }
         // Xwayland ends
+       
+    }
 
+    stages 
+    {
         stage('Notify')
         {
             steps
@@ -111,6 +114,5 @@ pipeline
                 build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6sllevk-exports']])
             }
         }
-        
     }
 }
