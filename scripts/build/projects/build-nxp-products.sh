@@ -563,7 +563,7 @@ reset_export_variables()
     do
         for TMP_DISTRO in $distros
         do
-            echo "${MACHINE}_${TMP_DISTRO}_EMAIL_SUBJECT = " > $EMAIL_NODE_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_EMAIL_SUBJECT = " >> $EMAIL_NODE_EXPORT_FILE
             echo "${MACHINE}_${TMP_DISTRO}_CAUSE = " >> $EMAIL_NODE_EXPORT_FILE
             echo "${MACHINE}_${TMP_DISTRO}_MACHINE =  " >> $EMAIL_NODE_EXPORT_FILE
             echo "${MACHINE}_${TMP_DISTRO}_SRC_CMD = " >> $EMAIL_NODE_EXPORT_FILE
