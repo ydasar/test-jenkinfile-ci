@@ -8,13 +8,13 @@ parallel (
             sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6slevk'
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6slevk'
                
             stage('imx6slevk')
             {
                 build(job: 'NXP-imx6slevk-pipeline', propagate: false)
             }
 
-            }
             stage('imx6sxsabresd')
             {
                 build(job: 'NXP-imx6sxsabresd-pipeline', propagate: false)
@@ -24,8 +24,7 @@ parallel (
             {
                 build(job: 'NXP-imx6sllevk-pipeline', propagate: false)
             }
-
-
+        }
     },
 
     "nxp-node1" : 
@@ -37,6 +36,8 @@ parallel (
             sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6ulevk'
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6ulevk'
+
             stage('imx6ulevk')
             {
                 build(job: 'NXP-imx6ulevk-pipeline', propagate: false)
@@ -58,8 +59,6 @@ parallel (
             }
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh consolidate_nodes_exports imx6solosabresd'
         }
-
-
 
     }
 )
