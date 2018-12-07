@@ -8,18 +8,20 @@ parallel (
             sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6slevk'
+
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6slevk'
-               
             stage('imx6slevk')
             {
                 build(job: 'NXP-imx6slevk-pipeline', propagate: false)
             }
 
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6sxsabresd'
             stage('imx6sxsabresd')
             {
                 build(job: 'NXP-imx6sxsabresd-pipeline', propagate: false)
             }
 
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6sllevk'
             stage('imx6sllevk')
             {
                 build(job: 'NXP-imx6sllevk-pipeline', propagate: false)
@@ -36,23 +38,26 @@ parallel (
             sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6ulevk'
-            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6ulevk'
 
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6ulevk'
             stage('imx6ulevk')
             {
                 build(job: 'NXP-imx6ulevk-pipeline', propagate: false)
             }
 
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6ull14x14evk'
             stage('imx6ull14x14evk')
             {
                 build(job: 'NXP-imx6ull14x14evk-pipeline', propagate: false)
             }
 
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6solosabreauto'
             stage('imx6solosabreauto')
             {
                 build(job: 'NXP-imx6solosabreauto-pipeline', propagate: false)
             }
 
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6solosabresd'
             stage('imx6solosabresd')
             {
                 build(job: 'NXP-imx6solosabresd-pipeline', propagate: false)

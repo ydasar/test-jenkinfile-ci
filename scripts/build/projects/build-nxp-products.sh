@@ -188,7 +188,7 @@ BuildDistro()
         # Once the source is completed somehow we are loosing MACHINE info. This is hack to retain the MACHINE
         MACHINE=$NXP_BOARD
         # Clean the build state
-        bitbake -c cleanall $IMAGE_TYPE
+        # bitbake -c cleanall $IMAGE_TYPE
         bitbake -c cleansstate $IMAGE_TYPE
                         
     fi
@@ -557,10 +557,10 @@ consolidate_nodes_exports()
 
 reset_export_variables()
 {
-    machines='imx6slevk imx6sllevk imx6sxsabresd imx6ulevk imx6ull14x14evk imx6solosabreauto imx6solosabresd'
+    #machines='imx6slevk imx6sllevk imx6sxsabresd imx6ulevk imx6ull14x14evk imx6solosabreauto imx6solosabresd'
     distros='wayland xwayland'
-    for MACHINE in $machines
-    do
+    #for MACHINE in $machines
+    #do
         for TMP_DISTRO in $distros
         do
             echo "${MACHINE}_${TMP_DISTRO}_EMAIL_SUBJECT = " >> $EMAIL_NODE_EXPORT_FILE
@@ -586,9 +586,42 @@ reset_export_variables()
             echo "${MACHINE}_${TMP_DISTRO}_TEST_SUITES = " >> $EMAIL_NODE_EXPORT_FILE
             echo "${MACHINE}_${TMP_DISTRO}_LAVA_STATUS = " >> $EMAIL_NODE_EXPORT_FILE
         done
-    done
+    #done
 }
 
+reset_local_email_export_variables()
+{
+    #machines='imx6slevk imx6sllevk imx6sxsabresd imx6ulevk imx6ull14x14evk imx6solosabreauto imx6solosabresd'
+    distros='wayland xwayland'
+    #for MACHINE in $machines
+    #do
+        for TMP_DISTRO in $distros
+        do
+            echo "${MACHINE}_${TMP_DISTRO}_EMAIL_SUBJECT = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_CAUSE = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_MACHINE =  " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_SRC_CMD = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_BITBAKE_CMD = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_build_status = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_build_time = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_BUILD_URL = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_build_type = Scratch" >> $EMAIL_LOCAL_EXPORT_FILE
+
+            echo "${MACHINE}_${TMP_DISTRO}_vte_build_status = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_vte_build_time = " >> $EMAIL_LOCAL_EXPORT_FILE
+
+            echo "${MACHINE}_${TMP_DISTRO}_FTP_SERVER_LOCATION = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_FTP_SERVER_LOCATION = " >> $EMAIL_LOCAL_EXPORT_FILE
+
+            echo "${MACHINE}_${TMP_DISTRO}_LAVA_JOB_URL = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_LAVA_TEST_TIME = " >>  $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_U_BOOT_VER = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_KERNEL_VER = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_TEST_SUITES = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "${MACHINE}_${TMP_DISTRO}_LAVA_STATUS = " >> $EMAIL_LOCAL_EXPORT_FILE
+        done
+    #done
+}
 
 
 # Main function

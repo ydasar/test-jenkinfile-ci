@@ -20,6 +20,7 @@ pipeline
             {
                 sh 'echo we are running from product job. pwd is $PWD'
                 sh '$BUILD_SCRIPT clear_product_export $MACHINE wayland'
+                sh '$BUILD_SCRIPT reset_local_email_export_variables $MACHINE wayland'
                 sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
             }
         }
