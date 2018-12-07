@@ -548,12 +548,22 @@ LavaTest()
 }
 
 # Consolidate the export parameters from different jenkins nodes.
-consolidate_nodes_exports()
+consolidate_node1_to_node3_export()
 {
     scp /tmp/part1_email_exports nxp-user3@134.86.62.178:/tmp/part1_email_exports_node1
     ssh nxp-user3@134.86.62.178 "cat /tmp/part1_email_exports_node1 >> /tmp/part1_email_exports"
 }
 
+
+# Consolidate the export parameters from different jenkins nodes.
+consolidate_node2_to_node4_export()
+{
+    scp /tmp/part2_email_exports nxp-user4@134.86.62.167:/tmp/part2_email_exports_node2
+    ssh nxp-user4@134.86.62.167 "cat /tmp/part2_email_exports_node2 >> /tmp/part2_email_exports"
+
+    scp /tmp/part2_email_exports nxp-user4@134.86.62.167:/tmp/part2_email_exports_node5
+    ssh nxp-user4@134.86.62.167 "cat /tmp/part2_email_exports_node5 >> /tmp/part2_email_exports"
+}
 
 reset_export_variables()
 {
