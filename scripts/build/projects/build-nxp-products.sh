@@ -597,28 +597,28 @@ reset_local_email_export_variables()
     #do
         for TMP_DISTRO in $distros
         do
-            echo "${MACHINE}_${TMP_DISTRO}_EMAIL_SUBJECT = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_CAUSE = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_MACHINE =  " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_SRC_CMD = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_BITBAKE_CMD = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_build_status = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_build_time = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_BUILD_URL = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_build_type = Scratch" >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_EMAIL_SUBJECT = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_CAUSE = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_MACHINE =  " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_SRC_CMD = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_BITBAKE_CMD = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_build_status = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_build_time = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_BUILD_URL = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_build_type = Scratch" >> $EMAIL_LOCAL_EXPORT_FILE
 
-            echo "${MACHINE}_${TMP_DISTRO}_vte_build_status = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_vte_build_time = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_vte_build_status = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_vte_build_time = " >> $EMAIL_LOCAL_EXPORT_FILE
 
-            echo "${MACHINE}_${TMP_DISTRO}_FTP_SERVER_LOCATION = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_FTP_SERVER_LOCATION = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_FTP_SERVER_LOCATION = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_FTP_SERVER_LOCATION = " >> $EMAIL_LOCAL_EXPORT_FILE
 
-            echo "${MACHINE}_${TMP_DISTRO}_LAVA_JOB_URL = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_LAVA_TEST_TIME = " >>  $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_U_BOOT_VER = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_KERNEL_VER = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_TEST_SUITES = " >> $EMAIL_LOCAL_EXPORT_FILE
-            echo "${MACHINE}_${TMP_DISTRO}_LAVA_STATUS = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_LAVA_JOB_URL = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_LAVA_TEST_TIME = " >>  $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_U_BOOT_VER = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_KERNEL_VER = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_TEST_SUITES = " >> $EMAIL_LOCAL_EXPORT_FILE
+            echo "product_${TMP_DISTRO}_LAVA_STATUS = " >> $EMAIL_LOCAL_EXPORT_FILE
         done
     #done
 }
