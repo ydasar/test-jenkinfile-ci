@@ -1,0 +1,147 @@
+device_type: imx6qpsabreauto
+job_name: Generic & VTE tests for " imx6qpsabreauto " target 
+timeouts:
+  job:
+    hours: 4
+  action:
+    hours: 4
+  connection:
+    hours: 4
+priority: medium
+visibility: public
+actions:
+- deploy:
+    namespace: nfs_boot
+    timeout:
+      minutes: 10
+    to: tftp
+    kernel:
+      url: http://134.86.254.48/tftpboot/imx6qpsabreauto/zImage
+      type: zimage
+    nfsrootfs:
+      url: http://134.86.254.48/rootfs/imx6qpsabreauto/fsl-image-qt5-validation-imx-imx6qpsabreauto.tar.bz2
+    os: oe
+    dtb:
+      url: http://134.86.254.48/tftpboot/imx6qpsabreauto/imx6qp-sabreauto.dtb
+- boot:
+    namespace: nfs_boot
+    method: u-boot
+    failure_retry: 2
+    commands: nfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@imx6qpsabreauto:~#'
+    timeout:
+      minutes: 10
+- test:
+    namespace: nfs_boot
+    timeout:
+      hours: 4
+    definitions:
+    - repository: ssh://git@stash.alm.mentorg.com:7999/qa/linux-qa.git
+      from: git
+      branch: test_sequence_check
+      path: automated/linux/ltp/ltp.yaml
+      name: test_suite_ltp
+    - repository:  https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/smoke/smoke.yaml
+      name: test_suite_smoke
+    - repository: https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/lmbench/lmbench-memory.yaml
+      name: test_suite_lmbench
+    - repository:  https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/iperf/iperf.yaml
+      name: test_suite_iperf
+    - repository: https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/memtester/memtester.yaml
+      name: test_suite_memtester
+    - repository: https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/iozone/iozone.yaml
+      name: test_suite_iozone
+    - repository:
+        metadata:
+            format: Lava-Test Single test case run
+            name: NXP_IMX_VTE_TEST_imx6qpsabreauto
+            description: "NXP_IMX_VTE_TEST (ltp)"
+            os:
+                - oe
+            scope:
+                - functional
+            devices:
+                - imx6qpsabreauto
+        run:
+            steps:
+                - lava-test-case ltp-setup    --shell ls /opt ; ls /opt/ltp ; cd /opt/ltp ; source ./manual_test;
+                - lava-test-case TGE-LV-RTC-0100    --shell  rtc_test.sh 2 
+                - lava-test-case TGE-LV-RTC-0020    --shell  rtc_testapp_4 
+                - lava-test-case TGE-LV-RTC-0011    --shell  rtc_testapp_2 
+                - lava-test-case TGE-LV-RTC-0013    --shell  rtc_testapp_5 -T POLL 
+                - lava-test-case TGE-LV-FEC-0011    --shell  eth_test.sh 13
+                - lava-test-case TGE-LV-GPT-0010    --shell  gpt_test_pm.sh 2 
+                - lava-test-case TGE-LV-SPDIF-0001    --shell  spdif_basic.sh
+                - lava-test-case TGE-LV-DVFS-0200    --shell  cpufreq-info && cpufreq-info -s && [ "`cpufreq-info -s`" != "" ] 
+                - lava-test-case TGE-LV-SD-1050    --shell  clk.sh sd 
+                - lava-test-case TGE-LV-ALSA-3005    --shell  clk.sh audio
+                - lava-test-case TGE-LV-ETHERNET-1007    --shell  eth_test.sh 7 
+                - lava-test-case TGE-LV-BENCH-10001    --shell  coremark_F4.exe  0x0 0x0 0x66 0 7 1 2000 &&  coremark_F4.exe  0x3415 0x3415 0x66 0 7 1 2000 && coremark_F4.exe 8 8 8 0 7 1 1200 
+                - lava-test-case TGE-LV-BENCH-10002    --shell  coremark_P4.exe 0x0 0x0 0x66 0 7 1 2000 && coremark_P4.exe 0x3415 0x3415 0x66 0 7 1 2000 && coremark_P4.exe 8 8 8 0 7 1 1200 
+                - lava-test-case TGE-LV-APP-0001    --shell  gst-inspect-1.0 
+                - lava-test-case TGE-LV-THERMO-0001    --shell  RC=1;THERMO_ZONES=$(find /sys/devices/ -name "thermal_zone*");if [ -z "$THERMO_ZONES" ];then echo "Fail to find any thermal zone, test FAIL!";else for zone in $THERMO_ZONES;do ls $zone/*temp |tail -3 | xargs cat ; rc=$?; if [ $rc -eq 0 ];then RC=0 ;else RC=1; break;fi ;done;fi;[ $RC -eq 0 ]  
+                - lava-test-case TGE-LV-KERNEL-SMP-0002    --shell  [ $(cat /proc/cpuinfo | grep processor | wc -l ) -eq 4 ] 
+                - lava-test-case TGE-LV-THERMO-0002    --shell  RC=1;THERMO_ZONES=$(find /sys/devices/ -name "thermal_zone*");if [ -z "$THERMO_ZONES" ];then echo "Fail to find any thermal zone, test FAIL!";else for zone in $THERMO_ZONES;do ls $zone/*type | xargs cat ; rc=$?; if [ $rc -eq 0 ];then RC=0 ;else RC=1; break ;fi ;done;fi;[ $RC -eq 0 ]  
+                - lava-test-case TGE-LV-CORE-0001    --shell  validate 
+                - lava-test-case TGE-LV-CORE-0002    --shell  check_events 
+                - lava-test-case TGE-LV-VPU-CLOCK-0001    --shell  clk.sh vpu 
+                - lava-test-case TGE-LV-I2C-CLK-0001    --shell  clk.sh i2c 
+                - lava-test-case TGE-LV-TIMER-FREQ-0001    --shell  timer_interrupt 
+                - lava-test-case TGE-LV-THERMO-0006    --shell  RC=1;THERMO_ZONES=$(find /sys/devices/ -name "thermal_zone*");if [ -z "$THERMO_ZONES" ];then echo "Fail to find any thermal zone, test FAIL!";else for zone in $THERMO_ZONES;do ls $zone/*temp|tail -3 | xargs cat && ls $zone/*type| xargs cat && rtc_testapp_6 -T 20&& ls $zone/*temp|tail -3 | xargs cat && ls $zone/*type| xargs cat ; rc=$?; if [ $rc -eq 0 ];then RC=0 ;else RC=1; break;fi ;done;fi;[ $RC -eq 0 ]  
+                - lava-test-case TGE-LV-RTC-0010    --shell  rtc_testapp_1 -T UIE -D /dev/rtc 
+                - lava-test-case TGE-LV-UART-0500    --shell  uart_test.sh 4 
+                - lava-test-case TGE-LV-KERNEL-10002    --shell  timer_resolution 
+                - lava-test-case TGE-LV-I2C-0001    --shell   i=0; num=`i2cdetect -l | wc -l`;while [ $i -lt $num ]; do i2cdetect -y -a -r $i; i=`expr $i + 1`; done 
+                - lava-test-case TGE-LV-VPU-0001    --shell  vpu_sequence_test.sh MPEG2 
+                - lava-test-case TGE-LV-VPU-0003    --shell  vpu_sequence_test.sh DivX 
+                - lava-test-case TGE-LV-VPU-0004    --shell  vpu_sequence_test.sh MPEG4 
+                - lava-test-case TGE-LV-VPU-0006    --shell  vpu_sequence_test.sh H263 
+                - lava-test-case TGE-LV-VPU-0007    --shell  vpu_sequence_test.sh H264-HP
+                - lava-test-case TGE-LV-THERMO-0004    --shell  thermal_freq.sh 1 
+                - lava-test-case TGE-LV-VPU-1017    --shell  vpu_sequence_test.sh VP8 
+                - lava-test-case TGE-LV-VPU-0018    --shell  vpu_sequence_test.sh VP9 
+                - lava-test-case TGE-LV-BT-0001    --shell  bt_bluez.sh 
+                - lava-test-case TGE-LV-VPU-1020    --shell  vpu_pm_test.sh 1 
+                - lava-test-case TGE-LV-QSPI-NOR-0301    --shell  nor_test.sh qspi 1 
+                - lava-test-case TGE-LV-VPU-1040    --shell  vpu_pm_test.sh 3 
+                - lava-test-case TGE-LV-VPU-1112    --shell  vpu_multi_dec_test.sh 4 2 
+                - lava-test-case TGE-LV-VPU-1113    --shell  vpu_multi_dec_test.sh 4 3 
+                - lava-test-case TGE-LV-VPU-1116    --shell  vpu_multi_dec_test.sh 4 4 
+                - lava-test-case TGE-LV-VPU-1117    --shell  vpu_multi_dec_test.sh 4 5 
+                - lava-test-case TGE-LV-VPU-1118    --shell  vpu_multi_dec_test.sh 4 6 
+                - lava-test-case TGE-LV-VPU-1119    --shell  vpu_multi_dec_test.sh 4 7 
+                - lava-test-case TGE-LV-VPU-1120    --shell  vpu_multi_dec_test.sh 5 1 
+                - lava-test-case TGE-LV-VPU-1121    --shell  vpu_multi_dec_test.sh 5 2 
+                - lava-test-case TGE-LV-VPU-1122    --shell  vpu_multi_dec_test.sh 5 3 
+                - lava-test-case TGE-LV-VPU-1123    --shell  vpu_multi_dec_test.sh 5 4 
+                - lava-test-case TGE-LV-VPU-1124    --shell  vpu_multi_dec_test.sh 6 1 
+                - lava-test-case TGE-LV-VPU-1125    --shell  vpu_multi_dec_test.sh 6 2 
+                - lava-test-case TGE-LV-VPU-1126    --shell  vpu_multi_dec_test.sh 6 3 
+                - lava-test-case TGE-LV-VPU-1127    --shell  vpu_multi_dec_test.sh 6 4 
+                - lava-test-case TGE-LV-VPU-1128    --shell  vpu_multi_dec_test.sh 6 5 
+                - lava-test-case TGE-LV-VPU-1129    --shell  vpu_multi_dec_test.sh 6 6 
+                - lava-test-case TGE-LV-VPU-1130    --shell  vpu_multi_dec_test.sh 6 7 
+                - lava-test-case TGE-LV-VPU-1131    --shell  vpu_multi_dec_test.sh 4 1 
+                - lava-test-case TGE-LV-KERNEL-SMP-0005    --shell  smp_test.sh 1 
+                - lava-test-case TGE-LV-SD-1800    --shell  storage_all.sh 10 
+                - lava-test-case TGE-LV-STORAGE-2001    --shell  storage_all.sh 1
+                - lava-test-case TGE-LV-SECURITY-005    --shell tcryp.sh 1
+                - lava-test-case TGE-LV-EMMC-HS400-0001    --shell  storage_all.sh 12
+                - lava-test-case TGE-LV-EMMC-HS400-0010    --shell  rtc_testapp_6 -T 50 -m mem && storage_all.sh 12     
+      from: inline
+      name: test_suite_NXP_IMX_VTE_TEST
+      path: inline/NXP_IMX_VTE_TEST_imx6qpsabreauto.yaml

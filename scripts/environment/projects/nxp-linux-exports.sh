@@ -21,8 +21,5 @@ LAVA_JOB_URL="http://134.86.60.40/scheduler/job/"
 EMAIL_NODE_EXPORT_FILE="/tmp/part1_email_exports"
 EMAIL_LOCAL_EXPORT_FILE="/tmp/$MACHINE-exports"
 BUILD_STATUS="<h3 style=\"color: white; background-color: red\">FAIL</h3>"
-#echo "${MACHINE}_${TMP_DISTRO}_build_status = $BUILD_STATUS" >> $EXPORT_FILE
 VTE_BUILD_STATUS="<h3 style=\"color: white; background-color: red\">FAIL</h3>"
-#echo "${MACHINE}_${TMP_DISTRO}_vte_build_status = $VTE_BUILD_STATUS" >> $EXPORT_FILE
 LAVA_STATUS="<h3 style=\"color: white; background-color: red\">FAIL</h3>"
-#echo "${MACHINE}_${TMP_DISTRO}_LAVA_STATUS = $LAVA_STATUS" >> $EXPORT_FILE
