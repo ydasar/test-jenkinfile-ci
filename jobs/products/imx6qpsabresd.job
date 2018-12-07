@@ -1,0 +1,111 @@
+pipeline 
+{
+    agent {label 'NXP_Ubuntu_16.04_64bit_Node2'}
+
+    environment 
+    {
+        MACHINE = "imx6qpsabresd"
+	BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
+    }
+
+    stages 
+    {
+
+
+        // Wayland Build and Test starts
+        stage('Build Wayland') 
+        {
+            steps 
+            {
+                sh 'echo we are running from product job. pwd is $PWD'
+                sh '$BUILD_SCRIPT clear_product_export $MACHINE wayland'
+                sh '$BUILD_SCRIPT reset_local_email_export_variables $MACHINE wayland'
+                sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
+            }
+        }
+    
+        stage('Wayland VTE Build') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
+            }
+        }
+
+        stage('Wayland images copy to FTP ') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland'
+            }
+        } 
+
+        stage('Wayland images copy to LAVA') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland'
+            }
+        }
+    
+        stage('Wayland VTE test on LAVA') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT LavaTest $MACHINE wayland'
+            }
+        }
+        // Wayland Build and test completed
+        
+
+        // X-Wayland Build and test start
+        stage('Build X-Wayland') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland'
+            }
+        }
+    
+        stage('X-Wayland VTE Build') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
+            }
+        }
+
+        stage('X-Wayland images copy to FTP ') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland'
+            }
+        }
+    
+
+        stage('X-Wayland images copy to LAVA') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland'
+            }
+        }
+    
+        stage('X-Wayland VTE test on LAVA') 
+        {
+            steps 
+            {
+                sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland'
+            }
+        }
+        // X-Wayland Build and test completed
+    }
+	post
+	{
+            always
+            {	
+            	build(job: 'NXP-part2-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6qpsabresd-exports']])
+            }
+    	}
+}

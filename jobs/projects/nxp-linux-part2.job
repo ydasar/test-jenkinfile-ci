@@ -1,0 +1,90 @@
+parallel (
+    "nxp-node2" : 
+    { 
+    
+        node('NXP_Ubuntu_16.04_64bit_Node2') 
+        {
+            sh 'echo we are running in master job and pwd is $PWD'
+            sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
+            sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6qpsabreauto'
+
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6qpsabreauto'
+            stage('imx6qpsabreauto')
+            {
+                build(job: 'NXP-imx6qpsabreauto-pipeline', propagate: false)
+            }
+
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6qpsabresd'
+            stage('imx6qpsabresd')
+            {
+                build(job: 'NXP-imx6qpsabresd-pipeline', propagate: false)
+            }
+
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6qsabreauto'
+            stage('imx6qsabreauto')
+            {
+                build(job: 'NXP-imx6qsabreauto-pipeline', propagate: false)
+            }
+        }
+    },
+
+    "nxp-node4" : 
+    { 
+
+        node('NXP_Ubuntu_16.04_64bit_Node4') 
+        {
+            sh 'echo we are running in master job and pwd is $PWD'
+            sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
+            sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6dlsabreauto'
+
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6dlsabreauto'
+            stage('imx6dlsabreauto')
+            {
+                build(job: 'NXP-imx6dlsabreauto-pipeline', propagate: false)
+            }
+
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6dlsabresd'
+            stage('imx6dlsabresd')
+            {
+                build(job: 'NXP-imx6dlsabresd-pipeline', propagate: false)
+            }
+
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6qsabresd'
+            stage('imx6qsabresd')
+            {
+                build(job: 'NXP-imx6qsabresd-pipeline', propagate: false)
+            }
+        }
+
+    }
+
+    "nxp-node5" :
+    {
+
+        node('NXP_Ubuntu_16.04_64bit_Node5')
+        {
+            sh 'echo we are running in master job and pwd is $PWD'
+            sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
+            sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx7dsabresd'
+
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx7dsabresd'
+            stage('imx7dsabresd')
+            {   
+                build(job: 'NXP-imx7dsabresd-pipeline', propagate: false)
+            }
+        }
+    }
+
+)
+          
+          
+node('NXP_Ubuntu_16.04_64bit_Node2') 
+{
+    stage('Notify')
+    {
+        build(job: 'NXP-part2-pipeline-email', parameters: [[$class: 'StringParameterValue', name: 'part2_email_exports', value: '/tmp/part2_email_exports']], propagate: false)
+    }
+}
