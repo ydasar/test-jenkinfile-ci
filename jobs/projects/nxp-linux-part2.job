@@ -26,6 +26,7 @@ parallel (
             {
                 build(job: 'NXP-imx6qsabreauto-pipeline', propagate: false)
             }
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh consolidate_node2_to_node4_export imx6qsabresd'
         }
     },
 
@@ -58,7 +59,7 @@ parallel (
             }
         }
 
-    }
+    },
 
     "nxp-node5" :
     {
@@ -75,6 +76,7 @@ parallel (
             {   
                 build(job: 'NXP-imx7dsabresd-pipeline', propagate: false)
             }
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh consolidate_node2_to_node4_export imx7dsabresd'
         }
     }
 

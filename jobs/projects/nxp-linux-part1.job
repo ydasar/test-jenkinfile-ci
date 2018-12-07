@@ -62,7 +62,7 @@ parallel (
             {
                 build(job: 'NXP-imx6solosabresd-pipeline', propagate: false)
             }
-            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh consolidate_nodes_exports imx6solosabresd'
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh consolidate_node1_to_node3_export imx6solosabresd'
         }
 
     }
