@@ -1,7 +1,12 @@
 #!/bin/bash
 
 # BUILD ENV
-IMAGE_TYPE="fsl-image-qt5-validation-imx"
+if [ $MACHINE == "imx7dsabresd" -o $MACHINE == "imx6ull14x14evk" -o $MACHINE == "imx6ulevk"];then
+        IMAGE_TYPE="fsl-image-validation-imx"
+else
+        IMAGE_TYPE="fsl-image-qt5-validation-imx"
+fi
+
 SRC_CMD="MACHINE=$MACHINE DISTRO=$DISTRO source imx-snapshot-yocto-setup.sh -b $BUILD_DIR"
 BITBAKE_CMD="bitbake $IMAGE_TYPE"
 SRC_DEPLOY_DIR="tmp/deploy/images/$MACHINE/"

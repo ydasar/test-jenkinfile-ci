@@ -33,7 +33,13 @@ MACHINE="$2"
 TMP_DISTRO="$3"
 DISTRO="fsl-imx-$TMP_DISTRO"
 # BUILD_TYPE="$4"
-BUILD_DIR="build-qt5-$TMP_DISTRO-$MACHINE"
+
+if [ $MACHINE == "imx7dsabresd" -o $MACHINE == "imx6ull14x14evk" -o $MACHINE == "imx6ulevk"];then
+        BUILD_DIR="build-$TMP_DISTRO-$MACHINE"
+else
+        BUILD_DIR="build-qt5-$TMP_DISTRO-$MACHINE"
+fi
+
 # VTE_BUILD="$5"
 SRC_CMD="MACHINE=$MACHINE DISTRO=$DISTRO source imx-snapshot-yocto-setup.sh -b $BUILD_DIR"
 source "scripts/environment/products/$MACHINE-exports.sh"
@@ -308,22 +314,46 @@ vte_build()
     echo $JENKINS_USER | sudo -S cp $MANUAL_FILE $TMP_ROOTFS/opt/ltp
 
     now=`date +%s`
-    mv ../../../../tmp/deploy/images/$NXP_BOARD/fsl-image-qt5-validation-imx-$NXP_BOARD.tar.bz2 \
-    ../../../../tmp/deploy/images/$NXP_BOARD/$now-fsl-image-qt5-validation-imx-$NXP_BOARD.tar.bz2
-    retVal=$?
-    if [ $retVal -ne 0 ]
-    then
-        echo "Move failed. $MACHINE $NXP_BOARD $ROOTFS_FILE $TMP_ROOTFS"
-        ErrorHandle
+
+    if [ $MACHINE == "imx7dsabresd" -o $MACHINE == "imx6ull14x14evk" -o $MACHINE == "imx6ulevk"];then
+        mv ../../../../tmp/deploy/images/$NXP_BOARD/fsl-image-validation-imx-$NXP_BOARD.tar.bz2 \
+	../../../../tmp/deploy/images/$NXP_BOARD/$now-fsl-image-validation-imx-$NXP_BOARD.tar.bz2
+    	retVal=$?
+        if [ $retVal -ne 0 ]
+        then
+        	echo "Move failed. $MACHINE $NXP_BOARD $ROOTFS_FILE $TMP_ROOTFS"
+        	ErrorHandle
+    	fi
+
+    else
+    	mv ../../../../tmp/deploy/images/$NXP_BOARD/fsl-image-qt5-validation-imx-$NXP_BOARD.tar.bz2 \
+    	../../../../tmp/deploy/images/$NXP_BOARD/$now-fsl-image-qt5-validation-imx-$NXP_BOARD.tar.bz2
+    	retVal=$?
+    	if [ $retVal -ne 0 ]
+    	then
+        	echo "Move failed. $MACHINE $NXP_BOARD $ROOTFS_FILE $TMP_ROOTFS"
+        	ErrorHandle
+    	fi
     fi
 
     cd $TMP_ROOTFS
-    echo $JENKINS_USER | sudo -S tar -cjf ../../../../../tmp/deploy/images/$NXP_BOARD/fsl-image-qt5-validation-imx-$NXP_BOARD.tar.bz2 *
-    retVal=$?
-    if [ $retVal -ne 0 ]
-    then
-        echo "compress root file system failed $MACHINE $NXP_BOARD $ROOTFS_FILE $TMP_ROOTFS"
-        ErrorHandle
+
+    if [ $MACHINE == "imx7dsabresd" -o $MACHINE == "imx6ull14x14evk" -o $MACHINE == "imx6ulevk"];then
+    	echo $JENKINS_USER | sudo -S tar -cjf ../../../../../tmp/deploy/images/$NXP_BOARD/fsl-image-validation-imx-$NXP_BOARD.tar.bz2 *
+    	retVal=$?
+    	if [ $retVal -ne 0 ]
+    	then
+        	echo "compress root file system failed $MACHINE $NXP_BOARD $ROOTFS_FILE $TMP_ROOTFS"
+        	ErrorHandle
+    	fi
+    else
+	echo $JENKINS_USER | sudo -S tar -cjf ../../../../../tmp/deploy/images/$NXP_BOARD/fsl-image-qt5-validation-imx-$NXP_BOARD.tar.bz2 *
+        retVal=$?
+        if [ $retVal -ne 0 ]
+        then
+                echo "compress root file system failed $MACHINE $NXP_BOARD $ROOTFS_FILE $TMP_ROOTFS"
+                ErrorHandle
+        fi
     fi
 
     echo $JENKINS_USER | sudo -S rm -rf $TMP_ROOTFS
