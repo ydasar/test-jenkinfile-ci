@@ -1,14 +1,10 @@
 #!/bin/bash
 
-# Change the below content for product specific
-#MACHINE="imx6ulevk"
+IMAGE_TYPE="fsl-image-validation-imx"
+BUILD_DIR="build-$TMP_DISTRO-$MACHINE"
+EMAIL_NODE_EXPORT_FILE="/tmp/part1_email_exports"
 
-#BUILD_TYPE="NONE"
-#DISTRO="fsl-imx-wayland"
-#BUILD_DIR="build-qt5-wayland-$MACHINE"
-
-NXP_BOARD="imx6ulevk"
-ROOTFS_FILE="fsl-image-qt5-validation-imx-$MACHINE.tar.bz2"
+ROOTFS_FILE="fsl-image-validation-imx-$MACHINE.tar.bz2"
 ZIMAGE_FILE="zImage"
 DTB_FILE="imx6ul-14x14-evk.dtb"
 

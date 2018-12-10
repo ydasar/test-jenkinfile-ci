@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# Change the below content for product specific
-#MACHINE="imx6sxsabresd"
+IMAGE_TYPE="fsl-image-qt5-validation-imx"
+BUILD_DIR="build-qt5-$TMP_DISTRO-$MACHINE"
+EMAIL_NODE_EXPORT_FILE="/tmp/part1_email_exports"
 
-#BUILD_TYPE="NONE"
-#DISTRO="fsl-imx-wayland"
-#BUILD_DIR="build-qt5-wayland-$MACHINE"
-
-NXP_BOARD="imx6sxsabresd"
 ROOTFS_FILE="fsl-image-qt5-validation-imx-$MACHINE.tar.bz2"
 ZIMAGE_FILE="zImage"
 DTB_FILE="imx6sx-sdb.dtb"
