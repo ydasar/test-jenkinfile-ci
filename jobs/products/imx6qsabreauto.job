@@ -12,7 +12,7 @@ pipeline
     {
 
 
-        // Wayland Build and Test starts
+        // Wayland starts
         stage('Build Wayland') 
         {
             steps 
@@ -24,7 +24,7 @@ pipeline
             }
         }
     
-        stage('Build VTE') 
+        stage('Build W-VTE') 
         {
             steps 
             {
@@ -32,7 +32,7 @@ pipeline
             }
         }
 
-        stage('Images to FTP ') 
+        stage('W-Images to FTP ') 
         {
             steps 
             {
@@ -40,7 +40,7 @@ pipeline
             }
         } 
 
-        stage('Images to LAVA') 
+        stage('W-Images to LAVA') 
         {
             steps 
             {
@@ -48,7 +48,7 @@ pipeline
             }
         }
     
-        stage('VTE test on LAVA') 
+        stage('W-VTE Test') 
         {
             steps 
             {
@@ -67,7 +67,7 @@ pipeline
             }
         }
     
-        stage('Build VTE') 
+        stage('Build XW-VTE') 
         {
             steps 
             {
@@ -75,7 +75,7 @@ pipeline
             }
         }
 
-        stage('Images to FTP ') 
+        stage('XW-Images to FTP ') 
         {
             steps 
             {
@@ -84,7 +84,7 @@ pipeline
         }
     
 
-        stage('Images to LAVA') 
+        stage('XW-Images to LAVA') 
         {
             steps 
             {
@@ -92,7 +92,7 @@ pipeline
             }
         }
     
-        stage('VTE test on LAVA') 
+        stage('XW-VTE Test') 
         {
             steps 
             {
