@@ -24,7 +24,7 @@ pipeline
             }
         }
     
-        stage('Wayland VTE Build') 
+        stage('Build VTE') 
         {
             steps 
             {
@@ -32,7 +32,7 @@ pipeline
             }
         }
 
-        stage('Wayland images copy to FTP ') 
+        stage('Images to FTP ') 
         {
             steps 
             {
@@ -40,7 +40,7 @@ pipeline
             }
         } 
 
-        stage('Wayland images copy to LAVA') 
+        stage('Images to LAVA') 
         {
             steps 
             {
@@ -48,7 +48,7 @@ pipeline
             }
         }
     
-        stage('Wayland VTE test on LAVA') 
+        stage('VTE test on LAVA') 
         {
             steps 
             {
@@ -67,7 +67,7 @@ pipeline
             }
         }
     
-        stage('X-Wayland VTE Build') 
+        stage('Build VTE') 
         {
             steps 
             {
@@ -75,7 +75,7 @@ pipeline
             }
         }
 
-        stage('X-Wayland images copy to FTP ') 
+        stage('Images to FTP ') 
         {
             steps 
             {
@@ -84,7 +84,7 @@ pipeline
         }
     
 
-        stage('X-Wayland images copy to LAVA') 
+        stage('Images to LAVA') 
         {
             steps 
             {
@@ -92,7 +92,7 @@ pipeline
             }
         }
     
-        stage('X-Wayland VTE test on LAVA') 
+        stage('VTE test on LAVA') 
         {
             steps 
             {
