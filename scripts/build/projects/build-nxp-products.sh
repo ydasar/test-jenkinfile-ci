@@ -475,6 +475,7 @@ LavaTest()
         echo "Could not run the LAVA job $LAVA_JOB at server $LAVA_WORKER"
         ErrorHandle
     fi
+    export_lava_variables
 
     # Wait, let LAVA trigger initiate
     sleep 10
