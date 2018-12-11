@@ -116,7 +116,9 @@ BuildDistro()
 
         echo "CLEAN Build. Current directory is $PWD"
         # Clean the temporary files
-        rm -rf /tmp/$BUILD_DIR ; mv $BUILD_DIR /tmp ; rm -rf /tmp/$BUILD_DIR &
+        echo $JENKINS_USER | sudo -S rm -rf /tmp/$BUILD_DIR
+        mv $BUILD_DIR /tmp
+        echo $JENKINS_USER | sudo -S rm -rf /tmp/$BUILD_DIR &
 
         # Create new directories for builds
         mkdir $BUILD_DIR ; cd $BUILD_DIR
