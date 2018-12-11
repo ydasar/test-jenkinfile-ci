@@ -105,6 +105,7 @@ pipeline
 	{
             always
             {	
+                sh 'scp /tmp/imx7dsabresd-exports nxp-user2@134.86.62.190:/tmp'
             	build(job: 'NXP-part2-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx7dsabresd-exports']])
             }
     	}

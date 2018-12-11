@@ -83,7 +83,7 @@ parallel (
 )
           
           
-node('NXP_Ubuntu_16.04_64bit_Node2') 
+node('NXP_Ubuntu_16.04_64bit_Node4') 
 {
     stage('Notify')
     {
