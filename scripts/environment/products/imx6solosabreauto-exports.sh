@@ -2,7 +2,7 @@
 
 ROOTFS_FILE="fsl-image-qt5-validation-imx-$MACHINE.tar.bz2"
 ZIMAGE_FILE="zImage"
-DTB_FILE="imx6solosabreauto-sdb.dtb"
+DTB_FILE="zImage-imx6dl-sabreauto.dtb"
 
 IMAGE_TYPE="fsl-image-qt5-validation-imx"
 BUILD_DIR="build-qt5-$TMP_DISTRO-$MACHINE"
