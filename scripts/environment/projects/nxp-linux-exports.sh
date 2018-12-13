@@ -16,7 +16,7 @@ LAVA_WORKER="$LAVA_USER@$LAVA_WORKER"
 LAVA_JOB="/opt/nxp-tests/$MACHINE.yaml"
 DST_LAVA_WORKER_ROOTFS="$LAVA_WORKER:/opt/rootfs/$MACHINE"
 DST_LAVA_WORKER_TFTPBOOT="$LAVA_WORKER:/opt/tftpboot/$MACHINE"
-LAVA_JOB_URL="http://134.86.60.40/scheduler/job/"
+LAVA_JOB_URL="http://134.86.60.40/scheduler/job"
 
 # EMAIL_NODE_EXPORT_FILE="/tmp/part1_email_exports"
 EMAIL_LOCAL_EXPORT_FILE="/tmp/$MACHINE-exports"
