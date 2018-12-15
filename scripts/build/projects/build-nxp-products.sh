@@ -384,7 +384,7 @@ CopyToFTP()
     if [ $retVal -ne 0 ]
     then
         echo "rsync failed to copy $SRC_DEPLOY_DIR$ROOTFS_FILE to $DST_FTP_SERVER"
-        ErrorHandle
+        # Yash open later ErrorHandle
     fi
 
     # Copy zimage to FTP server
@@ -393,7 +393,7 @@ CopyToFTP()
     if [ $retVal -ne 0 ]
     then
         echo "rsync failed to copy $SRC_DEPLOY_DIR$ZIMAGE_FILE to $DST_FTP_SERVER"
-        ErrorHandle
+        # Yash open later ErrorHandle
     fi
 
     # Copy dtb to FTP server
@@ -402,7 +402,7 @@ CopyToFTP()
     if [ $retVal -ne 0 ]
     then
         echo "rsync failed to copy $SRC_DEPLOY_DIR$DTB_FILE to $DST_FTP_SERVER"
-        ErrorHandle
+        # YAsh open later ErrorHandle
     fi
 
     # export the variables to jenkins environment
