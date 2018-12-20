@@ -124,7 +124,8 @@ BuildDistro()
         mkdir $BUILD_DIR ; cd $BUILD_DIR
 
         # Clone the NXP base sources
-        git clone git@github.com:MentorEmbedded/meta-imx-snapshot.git -b v4.14.62_1.0.0_beta_drop-2
+        # git clone git@github.com:MentorEmbedded/meta-imx-snapshot.git -b v4.14.62_1.0.0_beta_drop-2
+        git clone git@github.com:MentorEmbedded/meta-imx-snapshot.git -b v4.14.78_1.0.0_ga_drop-1
         retVal=$?
         if [ $retVal -ne 0 ]
         then
@@ -134,7 +135,8 @@ BuildDistro()
 
         # Download the NXP source
         cd meta-imx-snapshot
-        wget http://easource.alm.mentorg.com/sources/elm/nxp-sources/v4.14.62_1.0.0_beta_src_drop_2.tar.gz
+        # wget http://easource.alm.mentorg.com/sources/elm/nxp-sources/v4.14.62_1.0.0_beta_src_drop_2.tar.gz
+        wget http://easource.alm.mentorg.com/sources/elm/nxp-sources/v4.14.78_1.0.0_ga_src_drop-1.tar.gz
         retVal=$?
         if [ $retVal -ne 0 ]
         then
@@ -143,7 +145,8 @@ BuildDistro()
         fi
 
         # Untar the NXP source
-        tar -xf v4.14.62_1.0.0_beta_src_drop_2.tar.gz
+        # tar -xf v4.14.62_1.0.0_beta_src_drop_2.tar.gz
+        tar -xf v4.14.78_1.0.0_ga_src_drop-1.tar.gz
         retVal=$?
         if [ $retVal -ne 0 ]
         then
