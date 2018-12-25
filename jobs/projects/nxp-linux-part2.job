@@ -7,6 +7,7 @@ parallel (
             sh 'echo we are running in master job and pwd is $PWD'
             sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
+            sh 'git checkout scratch_build'
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6qpsabreauto'
 
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6qpsabreauto'
@@ -38,6 +39,7 @@ parallel (
             sh 'echo we are running in master job and pwd is $PWD'
             sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
+            sh 'git checkout scratch_build'
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx6dlsabreauto'
 
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6dlsabreauto'
@@ -69,6 +71,7 @@ parallel (
             sh 'echo we are running in master job and pwd is $PWD'
             sh 'mkdir -p test-jenkinfile-ci ; rm -rf test-jenkinfile-ci'
             sh 'git clone git@github.com:ydasar/test-jenkinfile-ci.git'
+            sh 'git checkout scratch_build'
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh clear_node_export imx7dsabresd'
 
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx7dsabresd'
