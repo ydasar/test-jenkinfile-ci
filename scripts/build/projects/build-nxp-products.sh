@@ -27,6 +27,8 @@ else
     BUILD_TYPE="$4"
 fi
 
+BUILD_TYPE="CLEAN"
+
 # Assign input parameters to corresponding values
 CALLED_FUNCTION="$1"
 MACHINE="$2"
