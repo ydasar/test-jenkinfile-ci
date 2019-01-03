@@ -12,15 +12,19 @@ pipeline
     stages 
     {
 
+
         // Wayland starts
         stage('Build Wayland') 
         {
             steps 
             {
-                sh 'echo we are running from product job. pwd is $PWD'
-                sh '$BUILD_SCRIPT clear_product_export $MACHINE wayland'
-                sh '$BUILD_SCRIPT reset_local_email_export_variables $MACHINE wayland'
-                sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
+                timeout(time: 5, unit: 'HOURS') 
+                {
+                    sh 'echo we are running from product job. pwd is $PWD'
+                    sh '$BUILD_SCRIPT clear_product_export $MACHINE wayland'
+                    sh '$BUILD_SCRIPT reset_local_email_export_variables $MACHINE wayland'
+                    sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
+                }
             }
         }
     
@@ -28,8 +32,11 @@ pipeline
         {
             steps 
             {
-                sh 'ls'
-                sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
+                timeout(time: 2, unit: 'HOURS') 
+                {
+                    sh 'ls'
+                    sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
+                }
             }
         }
 
@@ -37,7 +44,10 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland'
+                timeout(time: 5, unit: 'MINUTES') 
+                {
+                    sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland'
+                }
             }
         } 
 
@@ -45,7 +55,10 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland'
+                timeout(time: 5, unit: 'MINUTES') 
+                {
+                    sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland'
+                }
             }
         }
     
@@ -53,7 +66,10 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT LavaTest $MACHINE wayland'
+                timeout(time: 2, unit: 'HOURS') 
+                {
+                    sh '$BUILD_SCRIPT LavaTest $MACHINE wayland'
+                }
             }
         }
         // Wayland Build and test completed
@@ -64,7 +80,10 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland'
+                timeout(time: 5, unit: 'HOURS') 
+                {
+                    sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland'
+                }
             }
         }
     
@@ -72,8 +91,11 @@ pipeline
         {
             steps 
             {
-                sh 'ls'
-                sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
+                timeout(time: 2, unit: 'HOURS') 
+                {
+                    sh 'ls'
+                    sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
+                }
             }
         }
 
@@ -81,7 +103,10 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland'
+                timeout(time: 5, unit: 'MINUTES') 
+                {
+                    sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland'
+                }
             }
         }
     
@@ -90,7 +115,10 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland'
+                timeout(time: 5, unit: 'MINUTES') 
+                {
+                    sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland'
+                }
             }
         }
     
@@ -98,7 +126,10 @@ pipeline
         {
             steps 
             {
-                sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland'
+                timeout(time: 2, unit: 'HOURS') 
+                {
+                    sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland'
+                }
             }
         }
         // X-Wayland Build and test completed
@@ -108,8 +139,11 @@ pipeline
     {
         always 
         {
-            sh 'scp /tmp/imx6sllevk-exports nxp-user1@134.86.62.223:/tmp'
-            build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6sllevk-exports']])
+            timeout(time: 10, unit: 'MINUTES')
+            {
+                sh 'scp /tmp/imx6sllevk-exports nxp-user1@134.86.62.223:/tmp'
+                build(job: 'NXP-part1-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6sllevk-exports']])
+            }
         }
     }
 }
