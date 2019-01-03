@@ -15,16 +15,16 @@ parallel (
                 build(job: 'NXP-imx6slevk-pipeline', propagate: false)
             }
 
-            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6sxsabresd'
-            stage('imx6sxsabresd')
-            {
-                build(job: 'NXP-imx6sxsabresd-pipeline', propagate: false)
-            }
-
             sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6sllevk'
             stage('imx6sllevk')
             {
                 build(job: 'NXP-imx6sllevk-pipeline', propagate: false)
+            }
+
+            sh 'cd test-jenkinfile-ci ; scripts/build/projects/build-nxp-products.sh reset_export_variables imx6sxsabresd'
+            stage('imx6sxsabresd')
+            {
+                build(job: 'NXP-imx6sxsabresd-pipeline', propagate: false)
             }
         }
     },
