@@ -11,211 +11,211 @@ pipeline
 
     stages
     {
-		stage('Wayland')
-		{
-			stages
-			{
-				stage('Build')
-				{
-					steps
-					{
-						timeout(time: 5, unit: 'HOURS') 
-						{
-							script 
-							{
-								try 
-								{
-									build_result = true
-									sh 'echo we are running from product job. pwd is $PWD'
-									sh '$BUILD_SCRIPT clear_product_export $MACHINE wayland'
-									sh '$BUILD_SCRIPT reset_local_email_export_variables $MACHINE wayland'
-									sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
-								}
-								catch (err) 
-								{
-									sh 'echo Build Stage FAILED $err.toString'
-									build_result = false
-								}
-							}	
-						}
-					}
-				}
-				stage('VTE')
-				{
-					when 
-					{
-						expression { build_result != false }
-					}				
-					steps
-					{
-						timeout(time: 2, unit: 'HOURS') 
-						{
-							script 
-							{
-								try 
-								{
-									sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
-								}
-								catch (err) 
-								{
-									sh 'echo Build Stage FAILED $err.toString'
-									build_result = false
-								}
-							}	
-						}
-					}
-				}
-				stage('FTP')
-				{
-					when 
-					{
-						expression { build_result != false }
-					}				
-					steps
-					{
-						timeout(time: 5, unit: 'MINUTES') 
-						{
-							script 
-							{
-								try 
-								{
-									sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland'
-								}
-								catch (err) 
-								{
-									sh 'echo Build Stage FAILED $err.toString'
-									build_result = false
-								}
-							}
-						}
-					}
-				}
-				stage('LAVA')
-				{
-					when 
-					{
-						expression { build_result != false }
-					}				
-					steps
-					{
-						timeout(time: 5, unit: 'MINUTES') 
-						{
-							script 
-							{
-								try 
-								{
-									sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland'
-								}
-								catch (err) 
-								{
-									sh 'echo Build Stage FAILED $err.toString'
-									build_result = false
-								}
-							}
-						}
-					}
-				}
-				stage('TEST')
-				{
-					when 
-					{
-						expression { build_result != false }
-					}				
-					steps
-					{
-						timeout(time: 2, unit: 'HOURS') 
-						{
-							script 
-							{
-								try 
-								{
-									sh '$BUILD_SCRIPT LavaTest $MACHINE wayland'
-								}
-								catch (err) 
-								{
-									sh 'echo Build Stage FAILED $err.toString'
-									build_result = false
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+        stage('Wayland')
+        {
+            stages
+            {
+                stage('Build')
+                {
+                    steps
+                    {
+                        timeout(time: 5, unit: 'HOURS') 
+                        {
+                            script 
+                            {
+                                try 
+                                {
+                                    build_error = 0
+                                    sh 'echo we are running from product job. pwd is $PWD'
+                                    sh '$BUILD_SCRIPT clear_product_export $MACHINE wayland'
+                                    sh '$BUILD_SCRIPT reset_local_email_export_variables $MACHINE wayland'
+                                    sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
+                                }
+                                catch (err) 
+                                {
+                                    sh 'echo Build Stage FAILED'
+                                    build_error = 1
+                                }
+                            }   
+                        }
+                    }
+                }
+                stage('VTE')
+                {
+                    when 
+                    {
+                        expression { return build_error == 0 }
+                    }               
+                    steps
+                    {
+                        timeout(time: 2, unit: 'HOURS') 
+                        {
+                            script 
+                            {
+                                try 
+                                {
+                                    sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
+                                }
+                                catch (err) 
+                                {
+                                    sh 'echo VTE Stage FAILED'
+                                    build_error = 1
+                                }
+                            }   
+                        }
+                    }
+                }
+                stage('FTP')
+                {
+                    when 
+                    {
+                        expression { return build_error == 0 }
+                    }               
+                    steps
+                    {
+                        timeout(time: 5, unit: 'MINUTES') 
+                        {
+                            script 
+                            {
+                                try 
+                                {
+                                    sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland'
+                                }
+                                catch (err) 
+                                {
+                                    sh 'echo FTP Stage FAILED'
+                                    build_error = 1
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('LAVA')
+                {
+                    when 
+                    {
+                        expression { return build_error == 0 }
+                    }               
+                    steps
+                    {
+                        timeout(time: 5, unit: 'MINUTES') 
+                        {
+                            script 
+                            {
+                                try 
+                                {
+                                    sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland'
+                                }
+                                catch (err) 
+                                {
+                                    sh 'echo LAVA Stage FAILED'
+                                    build_error = 1
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('TEST')
+                {
+                    when 
+                    {
+                        expression { return build_error == 0 }
+                    }               
+                    steps
+                    {
+                        timeout(time: 2, unit: 'HOURS') 
+                        {
+                            script 
+                            {
+                                try 
+                                {
+                                    sh '$BUILD_SCRIPT LavaTest $MACHINE wayland'
+                                }
+                                catch (err) 
+                                {
+                                    sh 'echo TEST Stage FAILED'
+                                    build_error = 1
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-		stage('Xwayland')
-		{
-			stages
-			{
-				stage('Build')
-				{
-					when 
-					{
-						expression { build_result == false }
-					}				
-					steps
-					{
-						timeout(time: 5, unit: 'HOURS') 
-						{
-							sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland'
-						}
-					}
-				}
-				stage('VTE')
-				{
-					steps
-					{
-						timeout(time: 2, unit: 'HOURS') 
-						{
-							sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
-						}
-					}
-				}
-				stage('FTP')
-				{
-					steps
-					{
-						timeout(time: 5, unit: 'MINUTES') 
-						{
-							sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland'
-						}
-					}
-				}
-				stage('LAVA')
-				{
-					steps
-					{
-						timeout(time: 5, unit: 'MINUTES') 
-						{
-							sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland'
-						}
-					}
-				}
-				stage('TEST')
-				{
-					steps
-					{
-						timeout(time: 2, unit: 'HOURS') 
-						{
-							sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland'
-						}                            
-					}
-				}
-			}
-		}
+        stage('Xwayland')
+        {
+            stages
+            {
+                stage('Build')
+                {
+                    when 
+                    {
+                        expression { return 1 }
+                    }               
+                    steps
+                    {
+                        timeout(time: 5, unit: 'HOURS') 
+                        {
+                            sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland'
+                        }
+                    }
+                }
+                stage('VTE')
+                {
+                    steps
+                    {
+                        timeout(time: 2, unit: 'HOURS') 
+                        {
+                            sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
+                        }
+                    }
+                }
+                stage('FTP')
+                {
+                    steps
+                    {
+                        timeout(time: 5, unit: 'MINUTES') 
+                        {
+                            sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland'
+                        }
+                    }
+                }
+                stage('LAVA')
+                {
+                    steps
+                    {
+                        timeout(time: 5, unit: 'MINUTES') 
+                        {
+                            sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland'
+                        }
+                    }
+                }
+                stage('TEST')
+                {
+                    steps
+                    {
+                        timeout(time: 2, unit: 'HOURS') 
+                        {
+                            sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland'
+                        }                            
+                    }
+                }
+            }
+        }
     }
     post
     {
-		success
-		{
-			script
-			{
-				if(build_result) 
-				{
-					currentBuild.result = "FAILURE"
-				}
-			}
-		}	
+        success
+        {
+            script
+            {
+                if(build_error == 1) 
+                {
+                    currentBuild.result = "FAILURE"
+                }
+            }
+        }   
         always
         {
             timeout(time: 10, unit: 'MINUTES') 
