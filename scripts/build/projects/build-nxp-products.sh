@@ -573,6 +573,13 @@ consolidate_node2_to_node4_export()
     ssh nxp-user4@134.86.62.167 "cat /tmp/part2_email_exports_node5 >> /tmp/part2_email_exports"
 }
 
+consolidate_node4_to_node3_export()
+{
+    ssh nxp-user3@134.86.62.178 "cp /tmp/part1_email_exports /tmp/part12_email_exports_node1234"
+    scp /tmp/part2_email_exports nxp-user3@134.86.62.178:/tmp/part2_email_exports_node24
+    ssh nxp-user3@134.86.62.178 "cat /tmp/part2_email_exports_node24 >> /tmp/part12_email_exports_node1234"
+}
+
 reset_export_variables()
 {
     #machines='imx6slevk imx6sllevk imx6sxsabresd imx6ulevk imx6ull14x14evk imx6solosabreauto imx6solosabresd'
