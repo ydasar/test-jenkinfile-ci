@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -x
 # Check for number of arguments and validate the function call
 if [ $# -lt 2 ]
 then
