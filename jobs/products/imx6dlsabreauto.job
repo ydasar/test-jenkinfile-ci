@@ -1,112 +1,228 @@
-pipeline 
+pipeline
 {
     agent {label 'NXP_Ubuntu_16.04_64bit_Node4'}
 
-    environment 
+    environment
     {
         MACHINE = "imx6dlsabreauto"
-	BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
+        BUILD_SCRIPT = "scripts/build/projects/build-nxp-products.sh"
     }
 
-    stages 
+    stages
     {
+        stage('Wayland')
+        {
+            stages
+            {
+                stage('Build')
+                {
+                    steps
+                    {
+                        timeout(time: 5, unit: 'HOURS')
+                        {
+                            script
+                            {
+                                try
+                                {
+                                    build_error = 0
+                                    sh 'echo we are running from product job. pwd is $PWD'
+                                    sh '$BUILD_SCRIPT clear_product_export $MACHINE wayland'
+                                    sh '$BUILD_SCRIPT reset_local_email_export_variables $MACHINE wayland'
+                                    sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
+                                }
+                                catch (err)
+                                {
+                                    sh 'echo Build Stage FAILED'
+                                    build_error = 1
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('VTE')
+                {
+                    when
+                    {
+                        expression { return build_error == 0 }
+                    }
+                    steps
+                    {
+                        timeout(time: 2, unit: 'HOURS')
+                        {
+                            script
+                            {
+                                try
+                                {
+                                    sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
+                                }
+                                catch (err)
+                                {
+                                    sh 'echo VTE Stage FAILED'
+                                    build_error = 1
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('FTP')
+                {
+                    when
+                    {
+                        expression { return build_error == 0 }
+                    }
+                    steps
+                    {
+                        timeout(time: 5, unit: 'MINUTES')
+                        {
+                            script
+                            {
+                                try
+                                {
+                                    sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland'
+                                }
+                                catch (err)
+                                {
+                                    sh 'echo FTP Stage FAILED'
+                                    build_error = 1
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('LAVA')
+                {
+                    when
+                    {
+                        expression { return build_error == 0 }
+                    }
+                    steps
+                    {
+                        timeout(time: 5, unit: 'MINUTES')
+                        {
+                            script
+                            {
+                                try
+                                {
+                                    sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland'
+                                }
+                                catch (err)
+                                {
+                                    sh 'echo LAVA Stage FAILED'
+                                    build_error = 1
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('TEST')
+                {
+                    when
+                    {
+                        expression { return build_error == 0 }
+                    }
+                    steps
+                    {
+                        timeout(time: 2, unit: 'HOURS')
+                        {
+                            script
+                            {
+                                try
+                                {
+                                    sh '$BUILD_SCRIPT LavaTest $MACHINE wayland'
+                                }
+                                catch (err)
+                                {
+                                    sh 'echo TEST Stage FAILED'
+                                    build_error = 1
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-
-        // Wayland Build and Test starts
-        stage('Build Wayland') 
+        stage('Xwayland')
         {
-            steps 
+            stages
             {
-                sh 'echo we are running from product job. pwd is $PWD'
-                sh '$BUILD_SCRIPT clear_product_export $MACHINE wayland'
-                sh '$BUILD_SCRIPT reset_local_email_export_variables $MACHINE wayland'
-                sh '$BUILD_SCRIPT BuildDistro $MACHINE wayland'
+                stage('Build')
+                {
+                    when
+                    {
+                        expression { return 1 }
+                    }
+                    steps
+                    {
+                        timeout(time: 5, unit: 'HOURS')
+                        {
+                            sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland'
+                        }
+                    }
+                }
+                stage('VTE')
+                {
+                    steps
+                    {
+                        timeout(time: 2, unit: 'HOURS')
+                        {
+                            sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
+                        }
+                    }
+                }
+                stage('FTP')
+                {
+                    steps
+                    {
+                        timeout(time: 5, unit: 'MINUTES')
+                        {
+                            sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland'
+                        }
+                    }
+                }
+                stage('LAVA')
+                {
+                    steps
+                    {
+                        timeout(time: 5, unit: 'MINUTES')
+                        {
+                            sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland'
+                        }
+                    }
+                }
+                stage('TEST')
+                {
+                    steps
+                    {
+                        timeout(time: 2, unit: 'HOURS')
+                        {
+                            sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland'
+                        }
+                    }
+                }
             }
         }
-    
-        stage('Build W-VTE') 
-        {
-            steps 
-            {
-                sh '$BUILD_SCRIPT vte_build $MACHINE wayland'
-            }
-        }
-
-        stage('W-Images to FTP ') 
-        {
-            steps 
-            {
-                sh '$BUILD_SCRIPT CopyToFTP $MACHINE wayland'
-            }
-        } 
-
-        stage('W-Images to LAVA') 
-        {
-            steps 
-            {
-                sh '$BUILD_SCRIPT CopyToWorker $MACHINE wayland'
-            }
-        }
-    
-        stage('W-VTE Test') 
-        {
-            steps 
-            {
-                sh '$BUILD_SCRIPT LavaTest $MACHINE wayland'
-            }
-        }
-        // Wayland Build and test completed
-        
-
-        // X-Wayland Build and test start
-        stage('Build X-Wayland') 
-        {
-            steps 
-            {
-                sh '$BUILD_SCRIPT BuildDistro $MACHINE xwayland'
-            }
-        }
-    
-        stage('Build XW-VTE') 
-        {
-            steps 
-            {
-                sh '$BUILD_SCRIPT vte_build $MACHINE xwayland'
-            }
-        }
-
-        stage('XW-Images to FTP ') 
-        {
-            steps 
-            {
-                sh '$BUILD_SCRIPT CopyToFTP $MACHINE xwayland'
-            }
-        }
-    
-
-        stage('XW-Images to LAVA') 
-        {
-            steps 
-            {
-                sh '$BUILD_SCRIPT CopyToWorker $MACHINE xwayland'
-            }
-        }
-    
-        stage('XW-VTE Test') 
-        {
-            steps 
-            {
-                sh '$BUILD_SCRIPT LavaTest $MACHINE xwayland'
-            }
-        }
-        // X-Wayland Build and test completed
     }
-	post
-	{
-            always
-            {	
-                sh 'scp /tmp/imx6dlsabreauto-exports nxp-user2@134.86.62.190:/tmp'
-            	build(job: 'NXP-part2-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6dlsabreauto-exports']])
+    post
+    {
+        success
+        {
+            script
+            {
+                if(build_error == 1)
+                {
+                    currentBuild.result = "FAILURE"
+                }
             }
-    	}
+        }
+        always
+        {
+            timeout(time: 10, unit: 'MINUTES')
+            {
+                sh 'scp /tmp/imx6dlsabreauto-exports nxp-user2@134.86.62.190:/tmp'
+                build(job: 'NXP-part2-local-email', parameters: [[$class: 'StringParameterValue', name: 'local_email_exports', value: '/tmp/imx6dlsabreauto-exports']])
+            }
+        }
+    }
 }
+
